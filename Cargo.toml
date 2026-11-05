@@ -1,0 +1,110 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/core",
+    "crates/server",
+    "crates/gantry",
+    "crates/drivers/simulated",
+    "crates/drivers/bambu",
+    "crates/drivers/support",
+    "crates/drivers/moonraker",
+    "crates/drivers/octoprint",
+    "crates/drivers/prusalink",
+    "crates/drivers/duet",
+    "crates/drivers/elegoo-sdcp",
+    "crates/test-support/mock-bambu",
+    "crates/test-support/print-files",
+]
+default-members = ["crates/gantry"]
+# The Tauri desktop app is its own workspace, so building and testing the
+# server never needs a webview toolkit (webkit2gtk on Linux).
+exclude = ["desktop/src-tauri"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "ISC"
+repository = "https://github.com/adrianeyre/gantry"
+rust-version = "1.99"
+
+[workspace.dependencies]
+gantry-core = { path = "crates/core" }
+gantry-server = { path = "crates/server", default-features = false }
+gantry-driver-simulated = { path = "crates/drivers/simulated" }
+gantry-driver-bambu = { path = "crates/drivers/bambu" }
+gantry-driver-support = { path = "crates/drivers/support" }
+gantry-driver-moonraker = { path = "crates/drivers/moonraker" }
+gantry-driver-octoprint = { path = "crates/drivers/octoprint" }
+gantry-driver-prusalink = { path = "crates/drivers/prusalink" }
+gantry-driver-duet = { path = "crates/drivers/duet" }
+gantry-driver-elegoo-sdcp = { path = "crates/drivers/elegoo-sdcp" }
+gantry-mock-bambu = { path = "crates/test-support/mock-bambu" }
+gantry-print-file-fixtures = { path = "crates/test-support/print-files" }
+
+anyhow = "1"
+async-trait = "0.1"
+axum = { version = "0.8", features = ["ws"] }
+bytes = "1"
+futures = "0.3"
+jpeg-encoder = "0.7"
+zune-jpeg = "0.5"
+md-5 = "0.10"
+openh264 = { version = "0.9", default-features = false, features = ["source"] }
+mime_guess = "2"
+rumqttc = { version = "0.25", default-features = false, features = ["use-rustls-no-provider"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12", "logging"] }
+rust-embed = "8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+time = { version = "0.3", features = ["serde", "formatting", "parsing", "macros"] }
+tokio = { version = "1", features = ["full"] }
+tower = { version = "0.5", features = ["util"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "fmt"] }
+http-body-util = "0.1"
+hyper = { version = "1", features = ["server", "http1", "http2"] }
+hyper-util = { version = "0.1", features = ["server-auto", "server-graceful", "tokio", "service"] }
+rcgen = "0.14"
+argon2 = { version = "0.5", features = ["std"] }
+base64 = "0.22"
+rpassword = "7"
+chacha20poly1305 = "0.10"
+clap = { version = "4", features = ["derive", "env"] }
+hkdf = "0.12"
+hmac = "0.12"
+# TOTP (RFC 6238) is HMAC-SHA1, and its setup shows a QR code.
+sha1 = "0.10"
+# Passkeys (WebAuthn): CBOR, and ring (as rustls uses) to check signatures.
+ciborium = "0.2"
+ring = "0.17"
+# LAN discovery: mDNS for Moonraker and OctoPrint, SSDP for Bambu.
+mdns-sd = { version = "0.13", default-features = false, features = ["async"] }
+socket2 = { version = "0.5", features = ["all"] }
+qrcode = { version = "0.14", default-features = false, features = ["svg"] }
+rand = "0.8"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls-webpki-roots", "json", "http2"] }
+sha2 = "0.10"
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "sqlite", "migrate", "macros"] }
+tempfile = "3"
+tokio-rustls = { version = "0.26", default-features = false, features = ["ring", "tls12", "logging"] }
+tokio-tungstenite = "0.29"
+toml = "0.9"
+uuid = { version = "1", features = ["v4"] }
+# Print Files are zips. `zip` leaves flate2's backend to us: the pure-Rust
+# one, named here so a build of the gantry binary alone has it too.
+# Email Alerts over SMTP, on the same rustls (ring) as everything else.
+lettre = { version = "0.11", default-features = false, features = ["builder", "smtp-transport", "tokio1", "tokio1-rustls", "ring", "webpki-roots", "hostname"] }
+zip = { version = "4", default-features = false, features = ["deflate-flate2"] }
+flate2 = { version = "1", default-features = false, features = ["rust_backend"] }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+dbg_macro = "warn"
+
+# Dependencies are optimised even in dev builds: Argon2 and the simulated
+# camera encoder are painfully slow otherwise, and they rarely change.
+[profile.dev.package."*"]
+opt-level = 2

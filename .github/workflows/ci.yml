@@ -1,0 +1,59 @@
+# The CI gate (PRD §11): on every pull request, every push to main, and by
+# hand. A green run on main is what releases (release.yml). Only the unit
+# gate runs here: formatting, clippy, the Rust tests and the frontend's lint,
+# tests and build. Playwright end-to-end tests never run in Actions; they run
+# locally, against the binary.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# A newer push to the same pull request or branch replaces a run in progress.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26
+          cache: pnpm
+      # The binary embeds web/dist, so the frontend is built first.
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @gantry/web build
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.99.1
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - run: cargo test --workspace --locked
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @gantry/web lint
+      - run: pnpm --filter @gantry/web test
+      - run: pnpm --filter @gantry/web build
+      # The website (pages.yml publishes it): its tests, then the build, which typechecks
+      - run: pnpm --filter @gantry/site test
+      - run: pnpm --filter @gantry/site build

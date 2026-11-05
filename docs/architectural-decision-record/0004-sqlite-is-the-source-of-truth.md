@@ -1,0 +1,3 @@
+# SQLite holds all state; the config file holds only server settings
+
+Printers, users, Jobs, the Queue, History and the audit log all live in one SQLite database that the UI edits. The config file (TOML, overridable by environment variables) holds only what the server needs to start: bind address, data directory and secret key. PRD §11 suggested a config file listing printers, and a DevOps reader will expect one. We rejected it because two sources of truth for Printers (file and UI) need merge rules that nobody wants. Declarative, Git-friendly setup comes from config export and import (PRD §7.6) instead.

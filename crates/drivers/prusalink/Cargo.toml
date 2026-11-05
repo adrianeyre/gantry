@@ -1,0 +1,29 @@
+[package]
+name = "gantry-driver-prusalink"
+description = "The PrusaLink Driver: Prusa MK4, MK3.9, Mini and XL through PrusaLink's REST API."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+gantry-core.workspace = true
+gantry-driver-support.workspace = true
+async-trait.workspace = true
+bytes.workspace = true
+md-5.workspace = true
+rand.workspace = true
+reqwest.workspace = true
+serde_json.workspace = true
+time.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+axum.workspace = true
+hyper-util.workspace = true
+tracing-subscriber.workspace = true
+
+[lints]
+workspace = true

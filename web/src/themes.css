@@ -1,0 +1,350 @@
+/*
+ * Colour tokens: six themes, each in a light and a dark mode (Settings, Appearance).
+ * Generated, then checked by themes.test.ts: text and links reach 4.5:1 on every
+ * surface they sit on (WCAG 1.4.3), and control borders and the focus ring 3:1
+ * (1.4.11). Change a colour here and the test says whether it still passes.
+ *
+ * The selectors carry no `:root`, so any element can preview a theme: the theme
+ * picker draws each choice with its own tokens. `index.html` sets both attributes
+ * on <html> before the first paint; the bare `:root` fallbacks only matter
+ * without JavaScript.
+ */
+
+:root {
+  color-scheme: light;
+  --bg: #eef1f8;
+  --surface: #ffffff;
+  --surface-2: #e3e8f3;
+  --border: #cdd4e2;
+  --control-border: #6b7895;
+  --text: #11151c;
+  --text-muted: #4a5361;
+  --accent: #1d4ed8;
+  --accent-hover: #1942b8;
+  --on-accent: #ffffff;
+  --accent-soft: #e4eafa;
+  --focus: #1d4ed8;
+  --ok: #17703a;
+  --ok-soft: #e3eee7;
+  --warn: #835400;
+  --warn-soft: #f0eae0;
+  --bad: #b42318;
+  --bad-soft: #f6e5e3;
+  --brand-from: #1d4ed8;
+  --brand-to: #13338c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode]) {
+    color-scheme: dark;
+    --bg: #0f141f;
+    --surface: #171e2c;
+    --surface-2: #20283c;
+    --border: #2c374d;
+    --control-border: #697693;
+    --text: #e9edf3;
+    --text-muted: #a6b0bf;
+    --accent: #7ea6ff;
+    --accent-hover: #95b6ff;
+    --on-accent: #0b0e14;
+    --accent-soft: #2a3652;
+    --focus: #7ea6ff;
+    --ok: #5fd38d;
+    --ok-soft: #233b3c;
+    --warn: #f0bb55;
+    --warn-soft: #3a3733;
+    --bad: #ff8b82;
+    --bad-soft: #3c2f3a;
+    --brand-from: #7ea6ff;
+    --brand-to: #abc5ff;
+  }
+
+}
+
+[data-mode="light"][data-theme="cobalt"] {
+  color-scheme: light;
+  --bg: #eef1f8;
+  --surface: #ffffff;
+  --surface-2: #e3e8f3;
+  --border: #cdd4e2;
+  --control-border: #6b7895;
+  --text: #11151c;
+  --text-muted: #4a5361;
+  --accent: #1d4ed8;
+  --accent-hover: #1942b8;
+  --on-accent: #ffffff;
+  --accent-soft: #e4eafa;
+  --focus: #1d4ed8;
+  --ok: #17703a;
+  --ok-soft: #e3eee7;
+  --warn: #835400;
+  --warn-soft: #f0eae0;
+  --bad: #b42318;
+  --bad-soft: #f6e5e3;
+  --brand-from: #1d4ed8;
+  --brand-to: #13338c;
+}
+
+[data-mode="light"][data-theme="violet"] {
+  color-scheme: light;
+  --bg: #f0f0f8;
+  --surface: #ffffff;
+  --surface-2: #e6e6f3;
+  --border: #d0d3e2;
+  --control-border: #727595;
+  --text: #11151c;
+  --text-muted: #4a5361;
+  --accent: #6d28d9;
+  --accent-hover: #5d22b8;
+  --on-accent: #ffffff;
+  --accent-soft: #ede5fa;
+  --focus: #6d28d9;
+  --ok: #17703a;
+  --ok-soft: #e3eee7;
+  --warn: #835400;
+  --warn-soft: #f0eae0;
+  --bad: #b42318;
+  --bad-soft: #f6e5e3;
+  --brand-from: #6d28d9;
+  --brand-to: #471a8d;
+}
+
+[data-mode="light"][data-theme="teal"] {
+  color-scheme: light;
+  --bg: #edf2f4;
+  --surface: #ffffff;
+  --surface-2: #e1e9ee;
+  --border: #ccd6dd;
+  --control-border: #677c89;
+  --text: #11151c;
+  --text-muted: #4a5361;
+  --accent: #0b6e66;
+  --accent-hover: #095e57;
+  --on-accent: #ffffff;
+  --accent-soft: #e2eeed;
+  --focus: #0b6e66;
+  --ok: #17703a;
+  --ok-soft: #e3eee7;
+  --warn: #835400;
+  --warn-soft: #f0eae0;
+  --bad: #b42318;
+  --bad-soft: #f6e5e3;
+  --brand-from: #0b6e66;
+  --brand-to: #074842;
+}
+
+[data-mode="light"][data-theme="rose"] {
+  color-scheme: light;
+  --bg: #f3eff3;
+  --surface: #ffffff;
+  --surface-2: #eae6ec;
+  --border: #d5d2dc;
+  --control-border: #7c7486;
+  --text: #11151c;
+  --text-muted: #4a5361;
+  --accent: #b8123d;
+  --accent-hover: #9c0f34;
+  --on-accent: #ffffff;
+  --accent-soft: #f6e3e8;
+  --focus: #b8123d;
+  --ok: #17703a;
+  --ok-soft: #e3eee7;
+  --warn: #835400;
+  --warn-soft: #f0eae0;
+  --bad: #b42318;
+  --bad-soft: #f6e5e3;
+  --brand-from: #b8123d;
+  --brand-to: #780c28;
+}
+
+[data-mode="light"][data-theme="copper"] {
+  color-scheme: light;
+  --bg: #f2f0f1;
+  --surface: #ffffff;
+  --surface-2: #e9e7e9;
+  --border: #d4d4d9;
+  --control-border: #79777f;
+  --text: #11151c;
+  --text-muted: #4a5361;
+  --accent: #9a4310;
+  --accent-hover: #83390e;
+  --on-accent: #ffffff;
+  --accent-soft: #f3e8e2;
+  --focus: #9a4310;
+  --ok: #17703a;
+  --ok-soft: #e3eee7;
+  --warn: #835400;
+  --warn-soft: #f0eae0;
+  --bad: #b42318;
+  --bad-soft: #f6e5e3;
+  --brand-from: #9a4310;
+  --brand-to: #642c0a;
+}
+
+[data-mode="light"][data-theme="graphite"] {
+  color-scheme: light;
+  --bg: #eff0f4;
+  --surface: #ffffff;
+  --surface-2: #e4e7ed;
+  --border: #cfd4dc;
+  --control-border: #6e7787;
+  --text: #11151c;
+  --text-muted: #4a5361;
+  --accent: #374151;
+  --accent-hover: #2f3745;
+  --on-accent: #ffffff;
+  --accent-soft: #e7e8ea;
+  --focus: #374151;
+  --ok: #17703a;
+  --ok-soft: #e3eee7;
+  --warn: #835400;
+  --warn-soft: #f0eae0;
+  --bad: #b42318;
+  --bad-soft: #f6e5e3;
+  --brand-from: #374151;
+  --brand-to: #4f5662;
+}
+
+[data-mode="dark"][data-theme="cobalt"] {
+  color-scheme: dark;
+  --bg: #0f141f;
+  --surface: #171e2c;
+  --surface-2: #20283c;
+  --border: #2c374d;
+  --control-border: #697693;
+  --text: #e9edf3;
+  --text-muted: #a6b0bf;
+  --accent: #7ea6ff;
+  --accent-hover: #95b6ff;
+  --on-accent: #0b0e14;
+  --accent-soft: #2a3652;
+  --focus: #7ea6ff;
+  --ok: #5fd38d;
+  --ok-soft: #233b3c;
+  --warn: #f0bb55;
+  --warn-soft: #3a3733;
+  --bad: #ff8b82;
+  --bad-soft: #3c2f3a;
+  --brand-from: #7ea6ff;
+  --brand-to: #abc5ff;
+}
+
+[data-mode="dark"][data-theme="violet"] {
+  color-scheme: dark;
+  --bg: #11121e;
+  --surface: #1a1d2b;
+  --surface-2: #23263c;
+  --border: #30354c;
+  --control-border: #6e7492;
+  --text: #e9edf3;
+  --text-muted: #a6b0bf;
+  --accent: #b9a0ff;
+  --accent-hover: #c6b1ff;
+  --on-accent: #0b0e14;
+  --accent-soft: #373551;
+  --focus: #b9a0ff;
+  --ok: #5fd38d;
+  --ok-soft: #253a3b;
+  --warn: #f0bb55;
+  --warn-soft: #3c3632;
+  --bad: #ff8b82;
+  --bad-soft: #3f2f39;
+  --brand-from: #b9a0ff;
+  --brand-to: #d2c1ff;
+}
+
+[data-mode="dark"][data-theme="teal"] {
+  color-scheme: dark;
+  --bg: #0d151a;
+  --surface: #152027;
+  --surface-2: #1d2a36;
+  --border: #2a3945;
+  --control-border: #657a89;
+  --text: #e9edf3;
+  --text-muted: #a6b0bf;
+  --accent: #4fd6c8;
+  --accent-hover: #6fddd2;
+  --on-accent: #0b0e14;
+  --accent-soft: #1f4144;
+  --focus: #4fd6c8;
+  --ok: #5fd38d;
+  --ok-soft: #213d37;
+  --warn: #f0bb55;
+  --warn-soft: #38392e;
+  --bad: #ff8b82;
+  --bad-soft: #3a3136;
+  --brand-from: #4fd6c8;
+  --brand-to: #8de4db;
+}
+
+[data-mode="dark"][data-theme="rose"] {
+  color-scheme: dark;
+  --bg: #161218;
+  --surface: #1e1c25;
+  --surface-2: #2a2534;
+  --border: #373443;
+  --control-border: #777286;
+  --text: #e9edf3;
+  --text-muted: #a6b0bf;
+  --accent: #ff8fae;
+  --accent-hover: #ffa3bd;
+  --on-accent: #0b0e14;
+  --accent-soft: #46313e;
+  --focus: #ff8fae;
+  --ok: #5fd38d;
+  --ok-soft: #283936;
+  --warn: #f0bb55;
+  --warn-soft: #40352d;
+  --bad: #ff8b82;
+  --bad-soft: #422e34;
+  --brand-from: #ff8fae;
+  --brand-to: #ffb6ca;
+}
+
+[data-mode="dark"][data-theme="copper"] {
+  color-scheme: dark;
+  --bg: #151415;
+  --surface: #1e1e22;
+  --surface-2: #29282f;
+  --border: #36373f;
+  --control-border: #767680;
+  --text: #e9edf3;
+  --text-muted: #a6b0bf;
+  --accent: #f7a463;
+  --accent-hover: #f8b47f;
+  --on-accent: #0b0e14;
+  --accent-soft: #45362e;
+  --focus: #f7a463;
+  --ok: #5fd38d;
+  --ok-soft: #283b33;
+  --warn: #f0bb55;
+  --warn-soft: #40372a;
+  --bad: #ff8b82;
+  --bad-soft: #422f31;
+  --brand-from: #f7a463;
+  --brand-to: #fac49a;
+}
+
+[data-mode="dark"][data-theme="graphite"] {
+  color-scheme: dark;
+  --bg: #11141a;
+  --surface: #191e27;
+  --surface-2: #222836;
+  --border: #2f3746;
+  --control-border: #6d7789;
+  --text: #e9edf3;
+  --text-muted: #a6b0bf;
+  --accent: #c9d0dc;
+  --accent-hover: #d3d8e2;
+  --on-accent: #0b0e14;
+  --accent-soft: #393e48;
+  --focus: #c9d0dc;
+  --ok: #5fd38d;
+  --ok-soft: #243b37;
+  --warn: #f0bb55;
+  --warn-soft: #3b372e;
+  --bad: #ff8b82;
+  --bad-soft: #3e2f36;
+  --brand-from: #c9d0dc;
+  --brand-to: #b6bac3;
+}

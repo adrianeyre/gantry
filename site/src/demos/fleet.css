@@ -1,0 +1,284 @@
+/* The homepage hero: Gantry's Fleet page. Wide hero framing: the browser
+   is inset 40px from the top and left and runs off the right and the bottom,
+   the third card cut past its middle. The Alert is the page's own toast,
+   over the first card's filler. Compact: one card, the Alert over the
+   browser's chrome. */
+.fleet-demo {
+  & .ss-stage {
+    --gutter: 24px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: var(--ss-well);
+  }
+
+  .fleet-window {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    width: 1180px;
+    height: 560px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+  & .ss-stage[data-layout="compact"] .fleet-window {
+    top: 16px;
+    left: 16px;
+    width: 400px;
+    height: 520px;
+  }
+
+  .fleet-window .ss-window__body {
+    display: flex;
+    flex-direction: column;
+    background: var(--ss-canvas);
+  }
+
+  /* Gantry's top nav: the mark and name, then the pages, Fleet selected */
+  .fleet-nav {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 4px;
+    height: 44px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--ss-line);
+    background: var(--ss-surface);
+  }
+  .fleet-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ss-text-strong);
+  }
+  .fleet-tab {
+    display: flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .fleet-tab[data-on] {
+    background: var(--ss-accent-soft);
+    color: var(--ss-accent-text);
+  }
+  .fleet-nav__end {
+    margin-left: auto;
+  }
+
+  .fleet-page {
+    padding: 20px 24px;
+  }
+  .fleet-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .fleet-title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ss-text-strong);
+  }
+
+  .fleet-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 360px);
+    gap: 16px;
+    align-items: start;
+  }
+  & .ss-stage[data-layout="compact"] .fleet-grid {
+    grid-template-columns: 300px;
+  }
+  & .ss-stage[data-layout="compact"] .fleet-head {
+    width: 300px;
+  }
+  & .ss-stage[data-layout="compact"] .fleet-page {
+    padding: 16px 16px;
+  }
+
+  .fleet-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--ss-line);
+    border-radius: 12px;
+    background: var(--ss-surface);
+  }
+  .fleet-card__top {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .fleet-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .fleet-card__name {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ss-text-strong);
+  }
+  .fleet-card__state {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ss-text-strong);
+  }
+
+  .fleet-meter {
+    height: 6px;
+  }
+
+  .fleet-job {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  /* The Plate's thumbnail: its filament colour, as Gantry shows a sliced
+     file's preview when the file carries none */
+  .fleet-thumb {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: #d64933;
+    transition: background-color 0.4s ease;
+  }
+  .fleet-thumb[data-next] {
+    background: #2b8a5a;
+  }
+
+  .fleet-rows {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+  .fleet-row {
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    align-items: center;
+    min-height: 17px;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+  .fleet-job .fleet-row {
+    grid-template-columns: 68px minmax(0, 1fr);
+  }
+  .fleet-key {
+    color: var(--ss-text-faint);
+  }
+  .fleet-value {
+    color: var(--ss-text-strong);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .fleet-layer {
+    display: inline-flex;
+    gap: 0.3em;
+  }
+
+  .fleet-slots {
+    display: flex;
+    gap: 8px;
+  }
+
+  .fleet-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 4px;
+  }
+
+  /* A small label in the accent, on the card's own state line, that names
+     where the new Job came from */
+  .fleet-note {
+    flex: none;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--ss-accent-soft);
+    color: var(--ss-accent-text);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .fleet-note[data-show] {
+    opacity: 1;
+  }
+
+  /* The Alert: a desktop notification, a level above the window */
+  .fleet-alert-slot {
+    position: absolute;
+    top: 318px;
+    left: 64px;
+    width: max-content;
+  }
+  & .ss-stage[data-layout="compact"] .fleet-alert-slot {
+    top: 16px;
+    left: 16px;
+  }
+  .fleet-alert {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--ss-raised);
+    box-shadow: var(--ss-shadow-satellite);
+  }
+  .fleet-alert__icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--ss-warning-soft);
+    color: var(--ss-warning);
+  }
+  .fleet-alert__words {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .fleet-alert__title {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ss-text-strong);
+  }
+  .fleet-alert__body {
+    font-size: 12px;
+    line-height: 1.3;
+    color: var(--ss-text-faint);
+  }
+
+  .fleet-rest {
+    position: absolute;
+    top: 470px;
+    left: 760px;
+  }
+  & .ss-stage[data-layout="compact"] .fleet-rest {
+    top: 320px;
+    left: 300px;
+  }
+}

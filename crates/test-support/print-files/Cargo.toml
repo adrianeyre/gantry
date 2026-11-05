@@ -1,0 +1,19 @@
+[package]
+name = "gantry-print-file-fixtures"
+description = "Test support: small generated Print Files (.gcode.3mf and .gcode) for tests and Playwright."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+publish = false
+
+[dependencies]
+base64.workspace = true
+crc32fast = "1"
+flate2.workspace = true
+serde_json.workspace = true
+zip.workspace = true
+
+[lints]
+workspace = true

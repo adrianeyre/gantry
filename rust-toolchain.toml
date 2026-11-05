@@ -1,0 +1,5 @@
+[toolchain]
+# Kept in step with RUST_VERSION in .sandcastle/Dockerfile.
+channel = "1.99.1"
+components = ["clippy", "rustfmt"]
+profile = "minimal"

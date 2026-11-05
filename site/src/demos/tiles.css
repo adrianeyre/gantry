@@ -1,0 +1,158 @@
+/* The pictures in the feature grid and the quick start. Each is its own
+   Stage at 1:1, pinned to its tile's bottom and cropped by the tile; the
+   tile (page CSS) owns the ground, so these stages are transparent. */
+.tile-stage .ss-stage {
+  overflow: hidden;
+  background: transparent;
+}
+
+/* Each picture spans its tile edge to edge (site.css), so the stage owns the
+   tile's 28px gutter: what it holds starts a gutter in and bleeds off the
+   right and bottom. */
+
+/* ---- Queue ---- */
+.queue-demo {
+  .q-card {
+    position: absolute;
+    top: 0;
+    left: 28px;
+    width: 704px;
+    padding: 8px 0 0;
+    border: 1px solid var(--ss-line);
+    border-bottom: 0;
+    border-radius: 14px 14px 0 0;
+    background: var(--ss-surface);
+    box-shadow: var(--ss-shadow-ground);
+  }
+  & .ss-stage[data-layout="compact"] .q-card {
+    left: 20px;
+    width: 318px;
+  }
+  .q-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 18px 12px;
+  }
+  .q-title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ss-text-strong);
+  }
+  .q-row {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 18px;
+    border-top: 1px solid var(--ss-line-faint);
+  }
+  & .ss-stage[data-layout="compact"] .q-row {
+    grid-template-columns: 36px minmax(0, 1fr);
+  }
+  & .ss-stage[data-layout="compact"] .q-row > :last-child {
+    display: none;
+  }
+  .q-words.q-words--bars {
+    gap: 12px;
+  }
+  .q-thumb {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
+  .q-words {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .q-file {
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ss-text-strong);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .q-who {
+    font-size: 13px;
+    line-height: 1.3;
+    color: var(--ss-text-faint);
+  }
+}
+
+/* ---- Alerts ---- */
+.alerts-demo .alerts-phone {
+  position: absolute;
+  top: 0;
+  left: 36px;
+}
+
+/* ---- History ---- */
+.history-demo {
+  .h-card {
+    position: absolute;
+    top: 0;
+    left: 28px;
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px 24px 0;
+    border: 1px solid var(--ss-line);
+    border-bottom: 0;
+    border-radius: 14px 14px 0 0;
+    height: 300px;
+    background: var(--ss-surface);
+    box-shadow: var(--ss-shadow-ground);
+  }
+  .h-label {
+    font-size: 13px;
+    line-height: 1.3;
+    color: var(--ss-text-faint);
+  }
+  .h-figure {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--ss-text-strong);
+    letter-spacing: -0.01em;
+  }
+  .h-chart {
+    margin-top: 10px;
+    --ss-accent: var(--ss-success);
+  }
+}
+
+/* ---- Terminal ---- */
+.terminal-demo {
+  .t-window {
+    --ss-term-path: #7ea6ff;
+    --ss-term-dim: #8792a6;
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    right: 28px;
+    height: 380px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+  .t-body {
+    padding: 14px 16px;
+    font-family: var(--ss-mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: #d6dbe4;
+  }
+  /* A terminal wraps a long command at its own width */
+  .t-body .ss-term__line {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .t-right {
+    display: inline-block;
+    margin-left: 2ch;
+  }
+}

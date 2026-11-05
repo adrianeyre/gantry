@@ -1,0 +1,29 @@
+[package]
+name = "gantry-mock-bambu"
+description = "Test support: an in-process mock of a Bambu Lab printer's MQTT-over-TLS broker and FTPS server."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+publish = false
+
+[dependencies]
+base64.workspace = true
+bytes.workspace = true
+jpeg-encoder.workspace = true
+md-5.workspace = true
+openh264.workspace = true
+rcgen.workspace = true
+rumqttd = { version = "0.20", default-features = false }
+rustls = { workspace = true }
+serde_json.workspace = true
+tokio.workspace = true
+tokio-rustls = { workspace = true }
+tracing.workspace = true
+
+[dev-dependencies]
+rumqttc.workspace = true
+
+[lints]
+workspace = true

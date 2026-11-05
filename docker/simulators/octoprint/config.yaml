@@ -1,0 +1,33 @@
+# OctoPrint's settings for Gantry's tests: its virtual printer, connected at
+# start, with no first-run wizard and nothing phoning home. Copied into the
+# container's data volume on its first start (see the Dockerfile).
+accessControl:
+  salt: gantrytestsaltgantrytestsaltgant
+api:
+  allowCrossOrigin: true
+server:
+  firstRun: false
+  onlineCheck:
+    enabled: false
+  pluginBlacklist:
+    enabled: false
+  seenWizards:
+    backup: null
+    corewizard: 4
+    tracking: null
+plugins:
+  virtual_printer:
+    enabled: true
+  tracking:
+    enabled: false
+  announcements:
+    enabled_channels: []
+  softwareupdate:
+    check_overlay_url: ''
+serial:
+  autoconnect: true
+  port: VIRTUAL
+  baudrate: 0
+  additionalPorts: []
+webcam:
+  webcamEnabled: false

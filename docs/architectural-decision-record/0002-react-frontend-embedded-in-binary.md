@@ -1,0 +1,3 @@
+# React frontend, compiled into the Rust binary
+
+The web UI is React + TypeScript built with Vite, and its build output is embedded in the server binary (for example with `rust-embed`), so Gantry still ships as one file with no runtime dependencies. We rejected plain HTML/JS because the 3D model viewer, toolpath preview, Queue and file library need a component model and the Three.js ecosystem. We rejected a Rust/WASM framework (Leptos and similar) because the 3D and UI library support for it is far thinner. The cost is that Node is a **build-time** dependency, which is acceptable because goal 3 of the PRD forbids only runtime dependencies.

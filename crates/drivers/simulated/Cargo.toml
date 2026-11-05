@@ -1,0 +1,27 @@
+[package]
+name = "gantry-driver-simulated"
+description = "The Simulated Driver: a Printer imitated in software, for development, demos and tests."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+gantry-core.workspace = true
+async-trait.workspace = true
+bytes.workspace = true
+futures.workspace = true
+jpeg-encoder.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+time.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["test-util"] }
+
+[lints]
+workspace = true

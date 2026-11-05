@@ -1,0 +1,77 @@
+[package]
+name = "gantry-desktop"
+description = "Gantry's desktop app: the same UI in a native window, as a client of a Gantry server or with the server built in."
+version = "0.1.0"
+edition = "2024"
+license = "ISC"
+repository = "https://github.com/adrianeyre/gantry"
+rust-version = "1.99"
+publish = false
+
+# Its own workspace, outside the server's (see the root Cargo.toml), so the
+# server builds and tests without a webview toolkit.
+[workspace]
+
+[lib]
+name = "gantry_desktop"
+path = "src/lib.rs"
+
+[[bin]]
+name = "gantry-desktop"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2.7", features = [] }
+
+[dependencies]
+gantry-core = { path = "../../crates/core" }
+# Its default feature serves the Simulated Driver's panel.
+gantry-server = { path = "../../crates/server" }
+gantry-driver-simulated = { path = "../../crates/drivers/simulated" }
+gantry-driver-bambu = { path = "../../crates/drivers/bambu" }
+gantry-driver-moonraker = { path = "../../crates/drivers/moonraker" }
+gantry-driver-octoprint = { path = "../../crates/drivers/octoprint" }
+gantry-driver-prusalink = { path = "../../crates/drivers/prusalink" }
+gantry-driver-duet = { path = "../../crates/drivers/duet" }
+gantry-driver-elegoo-sdcp = { path = "../../crates/drivers/elegoo-sdcp" }
+
+tauri = { version = "2.12", features = [] }
+tauri-plugin-notification = "2.3"
+tauri-plugin-opener = "2.5"
+
+anyhow = "1"
+axum = "0.8"
+base64 = "0.22"
+# The OS keychain: Credential Manager, the macOS Keychain, and the Secret
+# Service on Linux (over zbus, so no libdbus is needed to build).
+keyring = { version = "3.6", features = ["windows-native", "apple-native", "async-secret-service", "tokio", "crypto-rust"] }
+rand = "0.8"
+# The OS's own roots, as the webview trusts, so a server the window can open
+# is one the check accepts.
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls-native-roots", "http2", "json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+url = "2"
+
+[dev-dependencies]
+futures = "0.3"
+tempfile = "3"
+tokio-tungstenite = "0.29"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+dbg_macro = "warn"
+
+# As in the server's workspace: Argon2 and the simulated camera encoder are
+# painfully slow unoptimised.
+[profile.dev.package."*"]
+opt-level = 2
+
+[profile.release]
+strip = true

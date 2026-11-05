@@ -1,0 +1,26 @@
+# Printer simulators for testing Gantry's Drivers locally (PRD §5.6). Never
+# run in GitHub Actions. See docs/processes/testing-drivers-with-simulators.md.
+#
+#   docker compose -f docker/simulators/compose.yaml up -d
+#
+# Moonraker answers on http://127.0.0.1:7125 and the Klipper simulator's test
+# camera streams MJPEG on http://127.0.0.1:8110/?action=stream. OctoPrint, with
+# its virtual printer, answers on http://127.0.0.1:5080.
+name: gantry-simulators
+
+services:
+  klipper:
+    image: ghcr.io/mainsail-crew/virtual-klipper-printer:latest
+    container_name: gantry-klipper
+    ports:
+      - "7125:7125"
+      - "8110:8080"
+    volumes:
+      # Over the example the image copies into its config folder on first start.
+      - ./klipper/printer.cfg:/home/printer/example-configs/printer.cfg:ro
+
+  octoprint:
+    build: ./octoprint
+    container_name: gantry-octoprint
+    ports:
+      - "5080:80"

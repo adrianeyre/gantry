@@ -1,0 +1,38 @@
+{
+  "name": "gantry",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A multi-printer fleet dashboard. This package.json holds only the Sandcastle harness; Gantry itself is Rust.",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adrianeyre/temp.git"
+  },
+  "type": "module",
+  "scripts": {
+    "sandcastle": "tsx .sandcastle/main.ts",
+    "sandcastle:ca": "tsx .sandcastle/export-ca.ts"
+  },
+  "engines": {
+    "node": ">=26",
+    "pnpm": ">=12"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=26",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.16.1",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@12.16.1",
+  "devDependencies": {
+    "@ai-hero/sandcastle": "^0.13.0",
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15"
+  }
+}

@@ -1,0 +1,14 @@
+# One Admin for Gantry's tests. The API key is a test value, never a real one:
+# GANTRY_OCTOPRINT_API_KEY defaults to it. The password is unusable on purpose.
+gantry:
+  active: true
+  apikey: GANTRYTESTKEY0123456789ABCDEFGHIJ
+  groups:
+  - admins
+  - users
+  password: '!'
+  permissions: []
+  roles:
+  - user
+  - admin
+  settings: {}

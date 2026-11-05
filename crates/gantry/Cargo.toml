@@ -1,0 +1,46 @@
+[package]
+name = "gantry"
+description = "Gantry: monitor and control a Fleet of 3D printers from one screen."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "gantry"
+path = "src/main.rs"
+
+[features]
+default = ["simulated", "bambu", "moonraker", "octoprint", "prusalink", "duet", "elegoo-sdcp"]
+# One feature per Driver (ADR-0003).
+simulated = ["dep:gantry-driver-simulated", "gantry-server/simulated"]
+bambu = ["dep:gantry-driver-bambu"]
+moonraker = ["dep:gantry-driver-moonraker"]
+octoprint = ["dep:gantry-driver-octoprint"]
+prusalink = ["dep:gantry-driver-prusalink"]
+duet = ["dep:gantry-driver-duet"]
+elegoo-sdcp = ["dep:gantry-driver-elegoo-sdcp"]
+
+[dependencies]
+gantry-core.workspace = true
+gantry-server = { workspace = true, default-features = false }
+gantry-driver-simulated = { workspace = true, optional = true }
+gantry-driver-bambu = { workspace = true, optional = true }
+gantry-driver-moonraker = { workspace = true, optional = true }
+gantry-driver-octoprint = { workspace = true, optional = true }
+gantry-driver-prusalink = { workspace = true, optional = true }
+gantry-driver-duet = { workspace = true, optional = true }
+gantry-driver-elegoo-sdcp = { workspace = true, optional = true }
+anyhow.workspace = true
+clap.workspace = true
+rpassword.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints]
+workspace = true

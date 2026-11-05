@@ -1,0 +1,77 @@
+[package]
+name = "gantry-server"
+description = "Gantry's HTTP and WebSocket server, with the React frontend embedded."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[features]
+default = ["simulated"]
+# The simulation endpoint behind the Simulated Driver's panel.
+simulated = ["dep:gantry-driver-simulated"]
+
+[dependencies]
+gantry-driver-simulated = { workspace = true, optional = true }
+gantry-core.workspace = true
+anyhow.workspace = true
+async-trait.workspace = true
+argon2.workspace = true
+axum.workspace = true
+base64.workspace = true
+bytes.workspace = true
+chacha20poly1305.workspace = true
+ciborium.workspace = true
+futures.workspace = true
+hkdf.workspace = true
+hmac.workspace = true
+qrcode.workspace = true
+sha1.workspace = true
+hyper.workspace = true
+hyper-util.workspace = true
+jpeg-encoder.workspace = true
+lettre.workspace = true
+mdns-sd.workspace = true
+mime_guess.workspace = true
+rand.workspace = true
+reqwest.workspace = true
+ring.workspace = true
+rust-embed.workspace = true
+rustls.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+socket2.workspace = true
+sqlx.workspace = true
+thiserror.workspace = true
+time.workspace = true
+tokio.workspace = true
+tokio-rustls.workspace = true
+toml.workspace = true
+tower.workspace = true
+tracing.workspace = true
+uuid.workspace = true
+zip.workspace = true
+# The backend `zip` needs for deflate (see the workspace Cargo.toml).
+flate2.workspace = true
+zune-jpeg.workspace = true
+
+[dev-dependencies]
+gantry-print-file-fixtures.workspace = true
+gantry-driver-bambu.workspace = true
+gantry-driver-moonraker.workspace = true
+gantry-driver-octoprint.workspace = true
+gantry-driver-support.workspace = true
+gantry-mock-bambu.workspace = true
+async-trait.workspace = true
+futures.workspace = true
+tokio-tungstenite.workspace = true
+gantry-driver-simulated.workspace = true
+http-body-util.workspace = true
+rcgen.workspace = true
+tempfile.workspace = true
+tracing-subscriber.workspace = true
+
+[lints]
+workspace = true

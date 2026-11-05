@@ -1,0 +1,14 @@
+# Keep the build context small, and keep secrets and local state out of it.
+.git
+.github
+.claude
+.sandcastle
+**/node_modules
+**/target
+web/dist
+web/test-results
+web/playwright-report
+data
+gantry.toml
+**/.env
+**/*.db

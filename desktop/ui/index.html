@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gantry · Choose a server</title>
+    <link rel="icon" href="logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <img src="logo.svg" alt="" width="48" height="48" />
+        <h1>Gantry</h1>
+      </header>
+
+      <p id="status" role="status" aria-live="polite">Opening Gantry…</p>
+      <p id="error" role="alert" class="error" hidden></p>
+
+      <div id="choose" hidden>
+        <section aria-labelledby="remote-heading">
+          <h2 id="remote-heading">Connect to a Gantry server</h2>
+          <p>Use the Gantry server that already runs your Fleet, on a Raspberry Pi, a NAS or another computer. You log in on the next page.</p>
+          <form id="remote">
+            <label for="server">Server address</label>
+            <input id="server" name="server" type="text" inputmode="url" autocomplete="url" spellcheck="false"
+              placeholder="http://192.168.1.20:8080" required />
+            <button type="submit">Connect</button>
+          </form>
+        </section>
+
+        <section aria-labelledby="embedded-heading">
+          <h2 id="embedded-heading">Run Gantry on this computer</h2>
+          <p>No separate server: the app runs Gantry itself, for this computer only. It runs while the app is open, and keeps its data in the app's data folder.</p>
+          <button id="embedded" type="button">Run Gantry here</button>
+        </section>
+      </div>
+
+      <section id="first-admin" aria-labelledby="admin-heading" hidden>
+        <h2 id="admin-heading">Create the first Admin account</h2>
+        <p>Gantry on this computer has no accounts yet. This one is an Admin, who can manage Printers, users and settings. Gantry is only reachable from this computer, so only you can do this.</p>
+        <form id="admin">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" autocomplete="username" spellcheck="false" required />
+          <label for="password">Password <span class="hint">(at least 8 characters)</span></label>
+          <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" required />
+          <label for="repeat">Repeat the password</label>
+          <input id="repeat" name="repeat" type="password" autocomplete="new-password" minlength="8" required />
+          <button type="submit">Create Admin account</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

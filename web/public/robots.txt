@@ -1,0 +1,6 @@
+# Gantry is login-protected: only the login page and its preview image are public.
+User-agent: *
+Allow: /$
+Allow: /login
+Allow: /og-image.jpg
+Disallow: /api/

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gantry.adrianeyre.co.uk/sitemap.xml

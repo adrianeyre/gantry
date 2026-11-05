@@ -1,0 +1,26 @@
+{
+  "print": {
+    "command": "push_status",
+    "msg": 0,
+    "sequence_id": "8",
+    "gcode_state": "IDLE",
+    "mc_percent": 0,
+    "print_error": 0,
+    "nozzle_temper": 24,
+    "nozzle_target_temper": 0,
+    "bed_temper": 23,
+    "bed_target_temper": 0,
+    "cooling_fan_speed": "0",
+    "big_fan1_speed": "0",
+    "big_fan2_speed": "0",
+    "heatbreak_fan_speed": "0",
+    "hms": [],
+    "ams": {
+      "ams_exist_bits": "0",
+      "tray_exist_bits": "0",
+      "tray_now": "254",
+      "ams": []
+    },
+    "vt_tray": { "id": "254", "tray_type": "PETG", "tray_color": "1E88E5FF", "remain": -1 }
+  }
+}

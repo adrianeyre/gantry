@@ -1,0 +1,102 @@
+# Builds the project website (site/, the @gantry/site package) and publishes
+# it to GitHub Pages. `pnpm --filter @gantry/site build` assembles it in
+# site/dist/ with Vite: the static page, the Stageshow demos mounted into it,
+# and the screenshots from docs/images/ and the icons from web/public/, copied
+# in so they are never kept twice in Git.
+#
+# The download buttons link straight to the latest release's files: the
+# build is given `gh release view`'s JSON. So it runs after each release
+# (called by release.yml), when anything it uses changes on main, or by hand.
+# With no release yet, the buttons link to the Releases page.
+#
+# The site's address is https://gantry.adrianeyre.co.uk (site/public/CNAME).
+# A site deployed by a workflow takes its custom domain from the repository's
+# Pages settings, not from that file, so it is set there once the DNS exists.
+# The build uses relative links, so it works at github.io until then.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "docs/images/**"
+      - "web/public/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: The commit to build the site from. Empty for the one that triggered the run.
+        type: string
+        default: ""
+
+# Read-only for every job; only `deploy` is given the Pages scopes, so the
+# build never holds a token that can publish the site.
+permissions:
+  contents: read
+
+# One deployment at a time; a newer run waits rather than cancelling one
+# that is publishing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build the website
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      # Configure Pages reads the site's settings; it writes nothing.
+      pages: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26
+          cache: pnpm
+      # Only the website's dependencies: the frontend and desktop app aren't built here.
+      - run: pnpm install --frozen-lockfile --filter @gantry/site
+      - run: pnpm --filter @gantry/site test
+      - name: The latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view --repo "$GITHUB_REPOSITORY" --json tagName,url,publishedAt,assets > "$RUNNER_TEMP/release.json"; then
+            jq -r '.tagName, (.assets[].name)' "$RUNNER_TEMP/release.json"
+          else
+            echo "No release yet: the download buttons link to the Releases page."
+            echo '{}' > "$RUNNER_TEMP/release.json"
+          fi
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - name: Build
+        env:
+          GANTRY_RELEASE: ${{ runner.temp }}/release.json
+        run: pnpm --filter @gantry/site build
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site/dist/
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Publishing the artifact needs both, and only this job has them.
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

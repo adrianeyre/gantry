@@ -1,0 +1,67 @@
+/*
+ * Gantry's look for every Stageshow stage on the site: the Cobalt theme's
+ * tokens from web/src/themes.css and the radii and type from web/src/styles.css,
+ * mapped onto the kit's tokens as Stageshow's references/looks.md describes.
+ * `.gantry-look` is on each Stage; its theme follows the page (scheme.ts).
+ */
+.gantry-look .ss-stage {
+  --ss-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ss-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+  --ss-canvas: #eef1f8;
+  --ss-surface: #ffffff;
+  --ss-chrome: #f6f8fc;
+  --ss-well: #e3e8f3;
+  --ss-raised: #ffffff;
+  --ss-line: #cdd4e2;
+  --ss-line-faint: #e3e8f3;
+  --ss-text-strong: #11151c;
+  --ss-text: #2c3442;
+  --ss-text-faint: #4a5361;
+  --ss-icon: #4a5361;
+  --ss-icon-faint: #8792a6;
+  --ss-accent: #1d4ed8;
+  --ss-accent-2: #13338c;
+  --ss-accent-soft: #e4eafa;
+  --ss-accent-text: #1942b8;
+  --ss-success: #17703a;
+  --ss-success-soft: #e3eee7;
+  --ss-success-text: #17703a;
+  --ss-warning: #835400;
+  --ss-warning-soft: #f0eae0;
+  --ss-warning-text: #835400;
+  --ss-danger: #b42318;
+  --ss-danger-soft: #f6e5e3;
+  --ss-danger-text: #b42318;
+  --ss-radius-sm: 6px;
+  --ss-radius-md: 8px;
+  --ss-radius-lg: 10px;
+  --ss-radius-window: 12px;
+}
+
+.gantry-look .ss-stage[data-theme="dark"] {
+  --ss-canvas: #0f141f;
+  --ss-surface: #171e2c;
+  --ss-chrome: #131926;
+  --ss-well: #0b1019;
+  --ss-raised: #20283c;
+  --ss-line: #2c374d;
+  --ss-line-faint: #20283c;
+  --ss-text-strong: #e9edf3;
+  --ss-text: #c9d0db;
+  --ss-text-faint: #a6b0bf;
+  --ss-icon: #a6b0bf;
+  --ss-icon-faint: #697693;
+  --ss-accent: #7ea6ff;
+  --ss-accent-2: #abc5ff;
+  --ss-accent-soft: #2a3652;
+  --ss-accent-text: #95b6ff;
+  --ss-success: #5fd38d;
+  --ss-success-soft: #233b3c;
+  --ss-success-text: #5fd38d;
+  --ss-warning: #f0bb55;
+  --ss-warning-soft: #3a3733;
+  --ss-warning-text: #f0bb55;
+  --ss-danger: #ff8b82;
+  --ss-danger-soft: #3c2f3a;
+  --ss-danger-text: #ff8b82;
+}

@@ -1,0 +1,27 @@
+[package]
+name = "gantry-driver-duet"
+description = "The Duet Driver: Duet boards running RepRapFirmware 3, through its HTTP API."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+gantry-core.workspace = true
+gantry-driver-support.workspace = true
+async-trait.workspace = true
+bytes.workspace = true
+reqwest.workspace = true
+serde_json.workspace = true
+time.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+axum.workspace = true
+hyper-util.workspace = true
+tracing-subscriber.workspace = true
+
+[lints]
+workspace = true

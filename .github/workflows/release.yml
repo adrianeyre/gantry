@@ -1,0 +1,289 @@
+# Releases (PRD §11). Each merge to main that passes CI is released by
+# semantic-release, which reads the conventional commits since the last
+# release to decide the version: a fix is a patch, a feat a minor, and a
+# breaking change (`feat!:` or `BREAKING CHANGE:`) a major. Commits that are
+# neither (docs, ci, chore, test…) release nothing. A release publishes:
+#
+# - the multi-arch Docker image, ghcr.io/<owner>/gantry:<version> and :latest,
+# - standalone binaries for Linux (amd64, arm64), Windows (x64) and macOS
+#   (arm64), with the frontend embedded,
+# - the desktop app's installers for Windows (NSIS .exe and .msi), macOS
+#   (arm64 .dmg) and Linux (x64 .deb and .AppImage), built by desktop.yml,
+# - a SHA256SUMS file covering every file attached,
+# - the version tag v<version> and a GitHub Release with notes and the
+#   binaries attached.
+#
+# Once released, the website (pages.yml) is rebuilt so its download buttons
+# link to the new release's files.
+#
+# Nothing is committed back to main: the version is compiled into the binary
+# from GANTRY_VERSION. Code signing is deferred. See docs/processes/releasing.md.
+name: Release
+
+on:
+  # After CI finishes on main. Only a green run for a push is released.
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  # By hand, to retry a release. With nothing new to release it does nothing.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  # semantic-release and the one plugin it doesn't bundle, run with pnpm dlx
+  # so the root package.json (the Sandcastle harness) doesn't grow a release
+  # toolchain. (npx refuses to run here: the root package.json's devEngines
+  # names pnpm.) Configured in .releaserc.json.
+  SEMANTIC_RELEASE: "--package=semantic-release@25.0.9 --package=@semantic-release/exec@7.1.0"
+
+jobs:
+  version:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    # A dry run still checks it could push the tag; it pushes nothing.
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.next.outputs.version }}
+      image: ${{ steps.next.outputs.image }}
+      sha: ${{ steps.next.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # The commit CI passed on, with the history semantic-release reads.
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26
+      - id: next
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          # A dry run: works out the next version and writes it to
+          # GITHUB_OUTPUT (verifyReleaseCmd in .releaserc.json), without
+          # tagging or publishing anything. No new version, no output, and
+          # every job below is skipped.
+          git checkout -B main
+          pnpm $SEMANTIC_RELEASE dlx semantic-release --dry-run --no-ci
+          echo "image=ghcr.io/${OWNER,,}/gantry" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  image:
+    needs: version
+    if: needs.version.outputs.version != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.version.outputs.sha }}
+      # No QEMU: the Dockerfile cross-compiles on the runner's own
+      # architecture, and the per-platform stage only copies files.
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          build-args: GANTRY_VERSION=${{ needs.version.outputs.version }}
+          # A pre-release (1.2.3-rc.1) doesn't move latest.
+          tags: |
+            ${{ needs.version.outputs.image }}:${{ needs.version.outputs.version }}
+            ${{ !contains(needs.version.outputs.version, '-') && format('{0}:latest', needs.version.outputs.image) || '' }}
+          labels: |
+            org.opencontainers.image.version=${{ needs.version.outputs.version }}
+            org.opencontainers.image.revision=${{ needs.version.outputs.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # The Linux binaries come out of the same Dockerfile stage as the image, so
+  # they are the exact binaries the image runs, built against Debian 12's
+  # glibc.
+  linux-binaries:
+    needs: version
+    if: needs.version.outputs.version != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.version.outputs.sha }}
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          target: binaries
+          build-args: GANTRY_VERSION=${{ needs.version.outputs.version }}
+          outputs: type=local,dest=out
+          cache-from: type=gha
+      - name: Package
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+        run: |
+          mkdir dist
+          for arch in amd64 arm64; do
+            tar -czf "dist/gantry-$VERSION-linux-$arch.tar.gz" -C "out/linux_$arch" gantry
+          done
+          ls -l dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: binaries-linux
+          path: dist/*
+          if-no-files-found: error
+
+  native-binaries:
+    needs: version
+    if: needs.version.outputs.version != ''
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - runner: windows-latest
+            target: x86_64-pc-windows-msvc
+            name: windows-x64
+          - runner: macos-14
+            target: aarch64-apple-darwin
+            name: macos-arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.version.outputs.sha }}
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26
+          cache: pnpm
+      # The binary embeds web/dist, so the frontend is built first, with the
+      # release's version for its footer.
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @gantry/web build
+        env:
+          GANTRY_VERSION: ${{ needs.version.outputs.version }}
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.99.1
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+      - name: Build
+        shell: bash
+        env:
+          # web/dist was built above. Never fall back to the placeholder page.
+          GANTRY_SKIP_WEB_BUILD: "1"
+          GANTRY_VERSION: ${{ needs.version.outputs.version }}
+        run: cargo build --release --locked -p gantry --target "${{ matrix.target }}"
+      - name: Package
+        shell: bash
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+          TARGET: ${{ matrix.target }}
+          NAME: ${{ matrix.name }}
+        run: |
+          mkdir dist
+          if [[ "$TARGET" == *windows* ]]; then
+            7z a "dist/gantry-$VERSION-$NAME.zip" "./target/$TARGET/release/gantry.exe"
+          else
+            tar -czf "dist/gantry-$VERSION-$NAME.tar.gz" -C "target/$TARGET/release" gantry
+          fi
+          ls -l dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ matrix.name }}
+          path: dist/*
+          if-no-files-found: error
+
+  # The desktop app's checks and installers, given the release's version.
+  # Its artifacts are desktop-<platform>, collected by `release` below.
+  desktop:
+    needs: version
+    if: needs.version.outputs.version != ''
+    uses: ./.github/workflows/desktop.yml
+    with:
+      version: ${{ needs.version.outputs.version }}
+      ref: ${{ needs.version.outputs.sha }}
+
+  release:
+    # Last, so the tag and the release exist only once the image, every
+    # binary and every installer have been built.
+    needs: [version, image, linux-binaries, native-binaries, desktop]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.version.outputs.sha }}
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: binaries-*
+          path: dist
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: desktop-*
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        working-directory: dist
+        run: |
+          # The installers arrive in their bundle folders (nsis/, msi/, dmg/,
+          # deb/, appimage/): upload-artifact keeps the paths below the
+          # folder they share. The release wants every file side by side.
+          find . -mindepth 2 -type f -exec mv -n -t . {} +
+          find . -mindepth 1 -type d -empty -delete
+          if [ -n "$(find . -mindepth 1 -type d)" ]; then
+            echo "::error::Two artifacts share a file name:" $(find . -mindepth 2 -type f)
+            exit 1
+          fi
+          files=(*)
+          sha256sum "${files[@]}" > SHA256SUMS
+          cat SHA256SUMS
+      - name: Tag and release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          # The version everything above was built as. If main somehow has
+          # a different next version now, the release stops rather than
+          # mislabel the binaries.
+          EXPECTED: ${{ needs.version.outputs.version }}
+        run: |
+          git checkout -B main
+          pnpm $SEMANTIC_RELEASE dlx semantic-release --no-ci
+
+  # The website, rebuilt so its download buttons point at this release.
+  pages:
+    needs: [version, release]
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/pages.yml
+    with:
+      ref: ${{ needs.version.outputs.sha }}

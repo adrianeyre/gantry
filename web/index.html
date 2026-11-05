@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en-GB" data-mode="light" data-theme="cobalt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <!--
+      Absolute URLs below start with __GANTRY_ORIGIN__, which the server replaces
+      with this copy's address (GANTRY_PUBLIC_URL, or the request's host) as it
+      serves the page: link previews on social sites need absolute URLs, and a
+      self-hosted Gantry's address isn't known when it is built.
+    -->
+    <title>Gantry · 3D printer fleet dashboard</title>
+    <meta
+      name="description"
+      content="Gantry is a self-hosted dashboard to watch and control every 3D printer in your fleet from one screen: live status, cameras, Jobs and alerts, on your own network."
+    />
+    <meta name="application-name" content="Gantry" />
+    <meta name="author" content="Adrian Eyre" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="canonical" href="__GANTRY_ORIGIN__/" />
+
+    <!-- Colours of the browser's own chrome, until the app sets the theme's. -->
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#eef1f8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f141f" media="(prefers-color-scheme: dark)" />
+
+    <!-- Icons: SVG for modern browsers, ICO for the rest, PNG for home screens. -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="Gantry" />
+
+    <!-- Open Graph: Facebook, LinkedIn, Slack, Discord, WhatsApp, Teams, iMessage… -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Gantry" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:url" content="__GANTRY_ORIGIN__/" />
+    <meta property="og:title" content="Gantry · Every 3D printer, one screen" />
+    <meta
+      property="og:description"
+      content="A self-hosted dashboard to watch and control your whole 3D printer fleet: live status, cameras, Jobs and alerts, on your own network."
+    />
+    <meta property="og:image" content="__GANTRY_ORIGIN__/og-image.jpg" />
+    <meta property="og:image:secure_url" content="__GANTRY_ORIGIN__/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The Gantry logo beside the words: Every 3D printer, one screen. Three printer cards show live progress."
+    />
+
+    <!-- X (Twitter) and the sites that read its tags, such as Mastodon and Bluesky. -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Gantry · Every 3D printer, one screen" />
+    <meta
+      name="twitter:description"
+      content="A self-hosted dashboard to watch and control your whole 3D printer fleet: live status, cameras, Jobs and alerts, on your own network."
+    />
+    <meta name="twitter:image" content="__GANTRY_ORIGIN__/og-image.jpg" />
+    <meta
+      name="twitter:image:alt"
+      content="The Gantry logo beside the words: Every 3D printer, one screen. Three printer cards show live progress."
+    />
+
+    <!-- Structured data, for search engines' rich results. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Gantry",
+        "description": "A self-hosted dashboard to watch and control every 3D printer in your fleet from one screen: live status, cameras, Jobs and alerts, on your own network.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Linux, Windows, macOS, Docker",
+        "url": "__GANTRY_ORIGIN__/",
+        "image": "__GANTRY_ORIGIN__/og-image.jpg",
+        "license": "https://opensource.org/license/isc-license-txt",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+        "author": { "@type": "Person", "name": "Adrian Eyre" },
+        "sameAs": "https://github.com/adrianeyre/gantry"
+      }
+    </script>
+
+    <!-- The saved mode and theme, before the first paint, so there is no flash of the wrong one. -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var mode = null;
+        var theme = null;
+        try {
+          mode = localStorage.getItem("gantry.mode");
+          theme = localStorage.getItem("gantry.theme");
+        } catch (e) {}
+        if (mode !== "light" && mode !== "dark") {
+          mode = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        if (!/^(cobalt|violet|teal|rose|copper|graphite)$/.test(theme || "")) theme = "cobalt";
+        root.setAttribute("data-mode", mode);
+        root.setAttribute("data-theme", theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <p class="noscript">Gantry needs JavaScript to show your Fleet. Please turn it on and reload this page.</p>
+    </noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

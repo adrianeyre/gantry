@@ -1,0 +1,9 @@
+{
+  "print": {
+    "command": "pause",
+    "sequence_id": "2000",
+    "result": "failed",
+    "reason": "mqtt message verify failed",
+    "err_code": 84033543
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@gantry/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Gantry's Tauri desktop app: the same embedded UI, as a client of a Gantry server or with the server built in. See docs/desktop.md.",
+  "type": "module",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.4"
+  }
+}

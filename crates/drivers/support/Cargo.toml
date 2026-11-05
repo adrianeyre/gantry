@@ -1,0 +1,24 @@
+[package]
+name = "gantry-driver-support"
+description = "What several of Gantry's Drivers share: an MJPEG-over-HTTP camera and the G-code of one Plate."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+gantry-core.workspace = true
+bytes.workspace = true
+futures.workspace = true
+reqwest.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+zip.workspace = true
+flate2.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["test-util"] }
+
+[lints]
+workspace = true

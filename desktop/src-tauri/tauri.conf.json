@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Gantry",
+  "mainBinaryName": "gantry-desktop",
+  "version": "0.1.0",
+  "identifier": "io.github.adrianeyre.gantry",
+  "build": {
+    "frontendDist": "../ui",
+    "beforeBuildCommand": "pnpm --filter @gantry/web build"
+  },
+  "app": {
+    "windows": [],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' data:; connect-src ipc: http://ipc.localhost"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "msi", "deb", "appimage", "dmg", "app"],
+    "publisher": "Adrian Eyre",
+    "copyright": "Adrian Eyre",
+    "category": "Utility",
+    "shortDescription": "Monitor and control a Fleet of 3D printers",
+    "longDescription": "Gantry monitors and controls a Fleet of 3D printers from one screen. The desktop app connects to a Gantry server, or runs one on this computer.",
+    "license": "ISC",
+    "homepage": "https://github.com/adrianeyre/gantry",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": { "installMode": "currentUser" }
+    }
+  }
+}

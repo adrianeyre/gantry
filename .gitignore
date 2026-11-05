@@ -1,0 +1,8 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+data/
+/target/
+gantry.toml
+site/dist/

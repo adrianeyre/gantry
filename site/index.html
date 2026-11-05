@@ -1,0 +1,583 @@
+<!doctype html>
+<!--
+  The Gantry website, built by `pnpm --filter @gantry/site build` (see
+  vite.config.ts). The double-brace placeholders come from release.mjs: the
+  repository's address and, for a release, the address of each download. The
+  screenshots and icons are copied in from docs/images/ and web/public/.
+
+  Everything reads without JavaScript. src/main.tsx mounts the Stageshow demos
+  into each [data-demo] slot, replacing its fallback, and src/page.ts adds the
+  copy buttons, the install tabs, the screenshot viewer, the menu button and
+  the "for your system" download.
+-->
+<html lang="en-GB" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      document.documentElement.classList.replace("no-js", "js");
+    </script>
+    <title>Gantry: one screen for your whole fleet of 3D printers</title>
+    <meta
+      name="description"
+      content="Gantry is a free, self-hosted dashboard that monitors and controls every 3D printer you own from one screen: Bambu Lab, Klipper, OctoPrint, Prusa, Duet and Elegoo. A single binary, a Docker image and desktop apps for Windows, macOS and Linux."
+    />
+    <link rel="canonical" href="{{SITE_URL}}/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f7f8fc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b1019" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{SITE_URL}}/" />
+    <meta property="og:title" content="Gantry" />
+    <meta property="og:description" content="Monitor and control a fleet of 3D printers from one screen. Free, open source and self-hosted." />
+    <meta property="og:image" content="{{SITE_URL}}/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="./src/site.css" />
+    <script type="module" src="./src/main.tsx"></script>
+  </head>
+  <body>
+    <!-- Icons: Lucide (ISC), and the GitHub mark. -->
+    <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M10 5H3" /><path d="M12 19H3" /><path d="M14 3v4" /><path d="M16 17v4" /><path d="M21 12h-9" /><path d="M21 19h-5" /><path d="M21 5h-7" /><path d="M8 10v4" /><path d="M8 12H3" /></symbol>
+      <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" /><path d="m3.3 7 8.7 5 8.7-5" /><path d="M12 22V12" /></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></symbol>
+      <symbol id="i-plug" viewBox="0 0 24 24"><path d="M12 22v-5" /><path d="M9 8V2" /><path d="M15 8V2" /><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z" /></symbol>
+      <symbol id="i-radar" viewBox="0 0 24 24"><path d="M19.07 4.93A10 10 0 0 0 6.99 3.34" /><path d="M4 6h.01" /><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35" /><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67" /><path d="M12 18h.01" /><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67" /><circle cx="12" cy="12" r="2" /><path d="m13.41 10.59 5.66-5.66" /></symbol>
+      <symbol id="i-accessibility" viewBox="0 0 24 24"><circle cx="16" cy="4" r="1" /><path d="m18 19 1-7-6 1" /><path d="m5 8 3-3 5.5 3-2.36 3.5" /><path d="M4.24 14.5a5 5 0 0 0 6.88 6" /><path d="M13.76 17.5a5 5 0 0 0-6.88-6" /></symbol>
+      <symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2" /><line x1="8" x2="16" y1="21" y2="21" /><line x1="12" x2="12" y1="17" y2="21" /></symbol>
+      <symbol id="i-container" viewBox="0 0 24 24"><path d="M22 7.7c0-.6-.4-1.2-.8-1.5l-6.3-3.9a1.72 1.72 0 0 0-1.7 0l-10.3 6c-.5.2-.9.8-.9 1.4v6.6c0 .5.4 1.2.8 1.5l6.3 3.9a1.72 1.72 0 0 0 1.7 0l10.3-6c.5-.3.9-1 .9-1.5Z" /><path d="M10 21.9V14L2.1 9.1" /><path d="m10 14 11.9-6.9" /><path d="M14 19.8v-8.1" /><path d="M18 17.5V9.4" /></symbol>
+      <symbol id="i-terminal" viewBox="0 0 24 24"><path d="M12 19h8" /><path d="m4 17 6-6-6-6" /></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 5h16" /><path d="M4 12h16" /><path d="M4 19h16" /></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></symbol>
+      <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></symbol>
+      <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></symbol>
+      <symbol id="i-maximize" viewBox="0 0 24 24"><path d="M15 3h6v6" /><path d="m21 3-7 7" /><path d="m3 21 7-7" /><path d="M9 21H3v-6" /></symbol>
+      <symbol id="i-windows" viewBox="0 0 24 24"><path d="M3 5.5 10.5 4.5v7H3z" /><path d="M12 4.3 21 3v8.5h-9z" /><path d="M3 12.5h7.5v7L3 18.5z" /><path d="M12 12.5h9V21l-9-1.3z" /></symbol>
+      <symbol id="i-apple" viewBox="0 0 24 24"><path d="M12 6.53c-.9-.03-2.18-.95-3.6-.93C6.53 5.63 4.82 6.7 3.86 8.4c-1.93 3.35-.5 8.3 1.38 11.02.92 1.33 2.02 2.82 3.46 2.77 1.39-.06 1.91-.9 3.59-.9 1.67 0 2.15.9 3.61.87 1.49-.03 2.43-1.35 3.34-2.69.62-.9 1.1-1.88 1.45-2.92-3.06-1.33-3.05-5.61.06-6.95-.94-1.37-2.43-2.12-3.98-2.1-1.31.02-2.12.92-2.77 1.03z" /><path d="M12.04 6.4c-.12-1.9 1.5-3.6 3.29-3.7.23 2-1.64 3.82-3.29 3.7z" /></symbol>
+      <symbol id="i-linux" viewBox="0 0 24 24"><path d="M12 2c-2.2 0-3.5 1.9-3.5 4.4 0 1.4.4 2.4-.5 3.8C6.8 12 5 14.2 5 16.8c0 .6.1 1.1.3 1.6" /><path d="M12 2c2.2 0 3.5 1.9 3.5 4.4 0 1.4-.4 2.4.5 3.8 1.2 1.8 3 4 3 6.6 0 .6-.1 1.1-.3 1.6" /><path d="M7 18.5c-1.2.3-2.6.3-2.6 1.4S6 21.6 7.3 22c1 .3 2-.2 2.4-1.2" /><path d="M17 18.5c1.2.3 2.6.3 2.6 1.4S18 21.6 16.7 22c-1 .3-2-.2-2.4-1.2" /><path d="M9.7 20.8c1.5.4 3.1.4 4.6 0" /><circle cx="10.5" cy="7" r=".6" fill="currentColor" /><circle cx="13.5" cy="7" r=".6" fill="currentColor" /><path d="M10.6 9.4c.8.6 2 .6 2.8 0" /></symbol>
+      <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 .5C5.73.5.67 5.56.67 11.83c0 5.01 3.25 9.26 7.76 10.76.57.1.78-.25.78-.55v-1.93c-3.16.69-3.83-1.52-3.83-1.52-.52-1.31-1.27-1.66-1.27-1.66-1.03-.71.08-.69.08-.69 1.14.08 1.74 1.17 1.74 1.17 1.01 1.74 2.66 1.24 3.31.95.1-.74.4-1.24.72-1.52-2.52-.29-5.18-1.26-5.18-5.61 0-1.24.44-2.25 1.17-3.05-.12-.29-.51-1.44.11-3 0 0 .95-.31 3.12 1.16a10.8 10.8 0 0 1 5.68 0c2.17-1.47 3.12-1.16 3.12-1.16.62 1.56.23 2.71.11 3 .73.8 1.17 1.81 1.17 3.05 0 4.36-2.66 5.32-5.2 5.6.41.35.77 1.04.77 2.1v3.11c0 .3.2.66.79.55a11.34 11.34 0 0 0 7.75-10.76C23.33 5.56 18.27.5 12 .5z" /></symbol>
+    </svg>
+
+    <a class="skip-link" href="#main">Skip to the content</a>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#top" aria-label="Gantry, back to the top">
+          <img src="favicon.svg" alt="" width="28" height="28" />
+          <span>Gantry</span>
+        </a>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav" hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-menu" /></svg>
+          <span class="visually-hidden">Menu</span>
+        </button>
+        <nav class="site-nav" id="site-nav" aria-label="Sections">
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#printers">Printers</a></li>
+            <li><a href="#screenshots">Screenshots</a></li>
+            <li><a href="#quick-start">Quick start</a></li>
+            <li><a href="#docs">Docs</a></li>
+          </ul>
+          <div class="nav-actions">
+            <a class="button button-ghost" href="{{REPO_URL}}">
+              <svg class="icon" aria-hidden="true"><use href="#i-github" /></svg>
+              GitHub
+            </a>
+            <a class="button button-primary" href="#download">Download</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="container">
+          <div class="hero-copy">
+            <a class="pill" href="{{RELEASE_URL}}">
+              <span class="pill-tag">Free</span>
+              <span>Open source and self-hosted · {{VERSION_LABEL}}</span>
+              <svg class="icon" aria-hidden="true"><use href="#i-arrow-right" /></svg>
+            </a>
+            <h1 id="hero-title">Every 3D printer you own, <span class="brand-text">on one screen</span></h1>
+            <p class="lede">
+              Gantry watches and controls your whole fleet from any browser, at home or away: live status, cameras,
+              a Queue that never prints onto an occupied bed, Alerts and History. One small binary on a Raspberry
+              Pi, mini PC or NAS. No vendor cloud.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary button-lg" href="#download" data-os-download>
+                <svg class="icon" aria-hidden="true"><use href="#i-download" /></svg>
+                <span data-os-label>Download Gantry</span>
+              </a>
+              <a class="button button-secondary button-lg" href="#quick-start">
+                <svg class="icon" aria-hidden="true"><use href="#i-terminal" /></svg>
+                Run it with Docker
+              </a>
+            </div>
+            <p class="hero-meta">Windows, macOS, Linux and Docker <span aria-hidden="true">·</span> ISC licence</p>
+          </div>
+        </div>
+        <div class="container hero-stage">
+          <figure class="demo demo-hero" data-demo="fleet" data-replay>
+            <picture>
+              <source srcset="images/fleet-dark.png" media="(prefers-color-scheme: dark)" />
+              <img
+                src="images/fleet-light.png"
+                width="1920"
+                height="1200"
+                alt="The Fleet page: a card for each Printer with its state, progress, temperatures and camera."
+              />
+            </picture>
+          </figure>
+          <p class="demo-caption">
+            A Job finishes, the Printer waits in Awaiting Clear and says so; mark the bed clear and the Queue's next
+            Job starts on it.
+          </p>
+        </div>
+      </section>
+
+      <section class="printers-strip" aria-label="Printers Gantry talks to">
+        <div class="container strip-inner">
+          <p>Talks to</p>
+          <ul role="list">
+            <li>Bambu Lab</li>
+            <li>Klipper</li>
+            <li>OctoPrint</li>
+            <li>PrusaLink</li>
+            <li>Duet</li>
+            <li>Elegoo</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="features" aria-labelledby="features-title">
+        <div class="container">
+          <header class="section-header">
+            <p class="eyebrow">What it does</p>
+            <h2 id="features-title">Everything a print farm needs, nothing it doesn't</h2>
+            <p>Gantry talks to each printer over your network and serves a login-protected dashboard. It never slices models and never needs a vendor's cloud.</p>
+          </header>
+
+          <div class="bento">
+            <article class="tile tile-queue">
+              <p class="tile-copy"><strong>A Queue that's safe.</strong> Queue a Plate for one Printer or any Compatible Printer. After each Job it waits until someone marks the bed clear.</p>
+              <div class="tile-picture demo" data-demo="queue">
+                <img src="images/queue.png" width="1600" height="1000" loading="lazy" alt="The Queue, with Jobs waiting for a named Printer or any Compatible Printer." />
+              </div>
+            </article>
+
+            <article class="tile tile-alerts">
+              <p class="tile-copy"><strong>Alerts where you are.</strong> Fleet-wide rules that reach ntfy, Discord, email, Telegram or the desktop, and signed webhooks.</p>
+              <div class="tile-picture demo demo-only" data-demo="alerts"></div>
+            </article>
+
+            <article class="tile tile-stat">
+              <p class="stat"><span class="stat-number">7</span><span class="stat-unit">Drivers</span></p>
+              <p class="tile-copy"><strong>Compiled in.</strong> Each printer protocol is built into the binary, so there are no plugins to install.</p>
+            </article>
+
+            <article class="tile tile-history">
+              <p class="tile-copy"><strong>History, kept for good.</strong> Every Job's Outcome, filament used and its cost, and utilisation over time.</p>
+              <div class="tile-picture demo demo-only" data-demo="history"></div>
+            </article>
+
+            <article class="tile tile-cameras">
+              <p class="tile-copy"><strong>Every camera at once.</strong> A camera on every card, a grid of them all, and a timelapse of each Job. Remote viewing streams only while someone watches.</p>
+              <div class="tile-photo">
+                <img src="images/cameras.png" width="1600" height="1000" loading="lazy" alt="The camera grid, one live view for each Printer." />
+              </div>
+            </article>
+
+            <article class="tile tile-secure">
+              <svg class="tile-icon" aria-hidden="true"><use href="#i-shield" /></svg>
+              <ul class="roles" role="list" aria-label="What each account can do">
+                <li><span>Viewer</span><span class="muted">Sees everything, changes nothing</span></li>
+                <li><span>Operator</span><span class="muted">Controls Printers and the Queue</span></li>
+                <li><span>Admin</span><span class="muted">Printers, users and settings</span></li>
+              </ul>
+              <p class="statement">A login, always.</p>
+              <p class="tile-copy">TOTP and passkeys, lockouts, an audit log, and Printer credentials encrypted at rest.</p>
+            </article>
+          </div>
+
+          <ul class="feature-list" role="list">
+            <li>
+              <svg class="icon" aria-hidden="true"><use href="#i-sliders" /></svg>
+              <h3>Real control</h3>
+              <p>Pause, resume and Cancel, temperatures, lights, fans, speed, homing, jogging and filament. Bulk actions report each Printer's result.</p>
+            </li>
+            <li>
+              <svg class="icon" aria-hidden="true"><use href="#i-box" /></svg>
+              <h3>A Print File library</h3>
+              <p>Upload sliced <code>.gcode.3mf</code> and <code>.gcode</code>, spin the 3D model and preview the toolpath as it prints.</p>
+            </li>
+            <li>
+              <svg class="icon" aria-hidden="true"><use href="#i-radar" /></svg>
+              <h3>Finds your Printers</h3>
+              <p>Bambu, Moonraker and OctoPrint Printers on the network are found and offered to an Admin, already filled in.</p>
+            </li>
+            <li>
+              <svg class="icon" aria-hidden="true"><use href="#i-plug" /></svg>
+              <h3>Built to connect</h3>
+              <p>A REST API with an OpenAPI document and tokens, webhooks, Prometheus metrics and Git-friendly config export.</p>
+            </li>
+            <li>
+              <svg class="icon" aria-hidden="true"><use href="#i-monitor" /></svg>
+              <h3>Desktop apps and a wall display</h3>
+              <p>Apps for Windows, macOS and Linux that connect to a server or run one, and a full-screen view for a workshop monitor.</p>
+            </li>
+            <li>
+              <svg class="icon" aria-hidden="true"><use href="#i-accessibility" /></svg>
+              <h3>Accessible, and yours to style</h3>
+              <p>Built to WCAG 2.2 AA and checked by axe-core on every page. Light, dark or System, and six themes.</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="printers" aria-labelledby="printers-title">
+        <div class="container">
+          <header class="section-header">
+            <p class="eyebrow">Supported printers</p>
+            <h2 id="printers-title">Seven Drivers, and no plugins</h2>
+            <p>Each printer protocol is a Driver built into the binary.</p>
+          </header>
+          <div class="table-wrap" role="region" aria-labelledby="printers-title" tabindex="0">
+            <table>
+              <thead>
+                <tr><th scope="col">Driver</th><th scope="col">Covers</th><th scope="col">Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Bambu Lab (LAN MQTT)</th><td>X1, P1 and A1 series, with cameras and Filament Slots</td><td><span class="badge badge-warn">Tested against mock servers</span></td></tr>
+                <tr><th scope="row">Moonraker (Klipper)</th><td>Voron, Creality K1, Sovol, Qidi, Elegoo Neptune 4, DIY Klipper</td><td><span class="badge">Tested against a simulator</span></td></tr>
+                <tr><th scope="row">OctoPrint</th><td>Almost anything, including old Marlin machines via a Raspberry Pi</td><td><span class="badge">Tested against a simulator</span></td></tr>
+                <tr><th scope="row">PrusaLink</th><td>Prusa MK4, MK3.9, Mini and XL</td><td><span class="badge badge-warn">Tested against a mock</span></td></tr>
+                <tr><th scope="row">Duet (RepRapFirmware)</th><td>Duet-based machines running RepRapFirmware 3</td><td><span class="badge badge-warn">Tested against a mock</span></td></tr>
+                <tr><th scope="row">Elegoo (SDCP)</th><td>Newer Elegoo machines, such as the Centauri Carbon</td><td><span class="badge badge-warn">Tested against a mock</span></td></tr>
+                <tr><th scope="row">Simulated</th><td>A Printer in software, for trying Gantry, demos and tests</td><td><span class="badge badge-ok">Ships in every build</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">No real printer has tried the Drivers yet. <a href="{{BLOB_URL}}/docs/supported-printers.md">What each needs, and what's still to be proven</a>.</p>
+        </div>
+      </section>
+
+      <section class="section" id="screenshots" aria-labelledby="screenshots-title">
+        <div class="container">
+          <header class="section-header">
+            <p class="eyebrow">The real thing</p>
+            <h2 id="screenshots-title">Screenshots</h2>
+            <p>Taken from a real Gantry with Simulated Printers. Select one to see it full size.</p>
+          </header>
+          <ul class="gallery" role="list">
+            <li class="gallery-wide">
+              <figure>
+                <a class="shot" href="images/fleet-dark.png" data-viewer>
+                  <img src="images/fleet-dark.png" width="1920" height="1200" loading="lazy" alt="The Fleet page in dark mode: Printers printing, idle, with a warning, and Awaiting Clear." />
+                  <svg class="icon shot-zoom" aria-hidden="true"><use href="#i-maximize" /></svg>
+                </a>
+                <figcaption>The Fleet, in dark mode</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <a class="shot" href="images/library.png" data-viewer>
+                  <img src="images/library.png" width="1600" height="1000" loading="lazy" alt="The Print File library, with a thumbnail for each Plate." />
+                  <svg class="icon shot-zoom" aria-hidden="true"><use href="#i-maximize" /></svg>
+                </a>
+                <figcaption>The Print File library</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <a class="shot" href="images/model-viewer.png" data-viewer>
+                  <img src="images/model-viewer.png" width="1600" height="1000" loading="lazy" alt="The interactive 3D model viewer showing a Plate." />
+                  <svg class="icon shot-zoom" aria-hidden="true"><use href="#i-maximize" /></svg>
+                </a>
+                <figcaption>The 3D model viewer</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <a class="shot" href="images/printer-detail.png" data-viewer>
+                  <img src="images/printer-detail.png" width="1600" height="1000" loading="lazy" alt="A Printer's page, with its controls, temperatures and camera." />
+                  <svg class="icon shot-zoom" aria-hidden="true"><use href="#i-maximize" /></svg>
+                </a>
+                <figcaption>A Printer's own page</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <a class="shot" href="images/wall.png" data-viewer>
+                  <img src="images/wall.png" width="1920" height="1200" loading="lazy" alt="The wall display: a read-only, full-screen view of the Fleet." />
+                  <svg class="icon shot-zoom" aria-hidden="true"><use href="#i-maximize" /></svg>
+                </a>
+                <figcaption>The wall display</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="download" aria-labelledby="download-title">
+        <div class="container">
+          <header class="section-header">
+            <p class="eyebrow">{{VERSION_LABEL}}</p>
+            <h2 id="download-title">Download Gantry</h2>
+            <p>
+              Run the server on an always-on machine, then use any browser, or the desktop app, to reach it. The
+              desktop app can also run Gantry itself on one computer.
+            </p>
+          </header>
+          <div class="download-grid">
+            <article class="card download" data-os="windows" aria-labelledby="dl-windows">
+              <svg class="card-icon" aria-hidden="true"><use href="#i-windows" /></svg>
+              <h3 id="dl-windows">Windows</h3>
+              <p class="muted">Windows 10 and 11, x64</p>
+              <a class="button button-primary" href="{{WIN_EXE_URL}}">
+                <svg class="icon" aria-hidden="true"><use href="#i-download" /></svg>
+                Desktop app (.exe)
+              </a>
+              <ul class="download-more" role="list">
+                <li><a href="{{WIN_MSI_URL}}">Desktop app (.msi)</a></li>
+                <li><a href="{{SERVER_WINDOWS_URL}}">Server binary (.zip)</a></li>
+              </ul>
+            </article>
+            <article class="card download" data-os="mac" aria-labelledby="dl-mac">
+              <svg class="card-icon" aria-hidden="true"><use href="#i-apple" /></svg>
+              <h3 id="dl-mac">macOS</h3>
+              <p class="muted">Apple silicon (M1 and later)</p>
+              <a class="button button-primary" href="{{MAC_DMG_URL}}">
+                <svg class="icon" aria-hidden="true"><use href="#i-download" /></svg>
+                Desktop app (.dmg)
+              </a>
+              <ul class="download-more" role="list">
+                <li><a href="{{SERVER_MACOS_URL}}">Server binary (.tar.gz)</a></li>
+              </ul>
+            </article>
+            <article class="card download" data-os="linux" aria-labelledby="dl-linux">
+              <svg class="card-icon" aria-hidden="true"><use href="#i-linux" /></svg>
+              <h3 id="dl-linux">Linux</h3>
+              <p class="muted">Desktop x64; server amd64 and arm64</p>
+              <a class="button button-primary" href="{{LINUX_APPIMAGE_URL}}">
+                <svg class="icon" aria-hidden="true"><use href="#i-download" /></svg>
+                Desktop app (.AppImage)
+              </a>
+              <ul class="download-more" role="list">
+                <li><a href="{{LINUX_DEB_URL}}">Desktop app (.deb)</a></li>
+                <li><a href="{{SERVER_LINUX_AMD64_URL}}">Server, amd64 (.tar.gz)</a></li>
+                <li><a href="{{SERVER_LINUX_ARM64_URL}}">Server, arm64 / Raspberry Pi (.tar.gz)</a></li>
+              </ul>
+            </article>
+            <article class="card download" aria-labelledby="dl-docker">
+              <svg class="card-icon" aria-hidden="true"><use href="#i-container" /></svg>
+              <h3 id="dl-docker">Docker</h3>
+              <p class="muted">linux/amd64 and linux/arm64</p>
+              <div class="code-line">
+                <code>docker pull {{IMAGE}}:{{VERSION}}</code>
+                <button class="copy" type="button" data-copy="docker pull {{IMAGE}}:{{VERSION}}" hidden>
+                  <svg class="icon" aria-hidden="true"><use href="#i-copy" /></svg>
+                  <span class="visually-hidden">Copy the command</span>
+                </button>
+              </div>
+              <ul class="download-more" role="list">
+                <li><a href="{{BLOB_URL}}/docs/running-in-docker.md">Compose, upgrades and backups</a></li>
+              </ul>
+            </article>
+          </div>
+          <p class="note">
+            The apps and binaries aren't code-signed yet, so Windows SmartScreen and macOS Gatekeeper warn the first
+            time. <a href="{{BLOB_URL}}/docs/installing.md">How to install them</a>, and
+            <a href="{{CHECKSUMS_URL}}">SHA256SUMS</a> to check a download.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="quick-start" aria-labelledby="quick-start-title">
+        <div class="container">
+          <header class="section-header">
+            <p class="eyebrow">Quick start</p>
+            <h2 id="quick-start-title">Running in five minutes</h2>
+            <p>Gantry needs a secret key (it encrypts Printer credentials) and one Admin account. There's no setup page.</p>
+          </header>
+          <div class="quick-start">
+            <div>
+              <div class="tabs" data-tabs>
+                <div class="tab-list" role="tablist" aria-label="How to run Gantry" hidden>
+                  <button role="tab" type="button" id="tab-docker" aria-controls="panel-docker" aria-selected="true">Docker</button>
+                  <button role="tab" type="button" id="tab-binary" aria-controls="panel-binary" aria-selected="false" tabindex="-1">Binary</button>
+                  <button role="tab" type="button" id="tab-source" aria-controls="panel-source" aria-selected="false" tabindex="-1">From source</button>
+                </div>
+                <section class="tab-panel" id="panel-docker" role="tabpanel" aria-labelledby="tab-docker">
+                  <h3 class="tab-title">Docker</h3>
+                  <div class="terminal">
+                    <button class="copy" type="button" data-copy-from="next" hidden>
+                      <svg class="icon" aria-hidden="true"><use href="#i-copy" /></svg>
+                      <span class="visually-hidden">Copy the commands</span>
+                    </button>
+                    <pre><code>openssl rand -base64 32 &gt; gantry-secret-key   # keep it safe
+docker run -d --name gantry --restart unless-stopped -p 8080:8080 -v gantry-data:/data \
+  -e GANTRY_SECRET_KEY="$(cat gantry-secret-key)" {{IMAGE}}:latest
+docker exec -it gantry gantry user create --admin --username admin</code></pre>
+                  </div>
+                </section>
+                <section class="tab-panel" id="panel-binary" role="tabpanel" aria-labelledby="tab-binary">
+                  <h3 class="tab-title">Binary</h3>
+                  <div class="terminal">
+                    <button class="copy" type="button" data-copy-from="next" hidden>
+                      <svg class="icon" aria-hidden="true"><use href="#i-copy" /></svg>
+                      <span class="visually-hidden">Copy the commands</span>
+                    </button>
+                    <pre><code>tar -xzf gantry-*-linux-arm64.tar.gz           # or the archive for your system
+export GANTRY_SECRET_KEY="$(openssl rand -base64 32)"   # store it somewhere safe
+./gantry user create --admin --username admin
+./gantry serve                                   # http://127.0.0.1:8080</code></pre>
+                  </div>
+                </section>
+                <section class="tab-panel" id="panel-source" role="tabpanel" aria-labelledby="tab-source">
+                  <h3 class="tab-title">From source</h3>
+                  <div class="terminal">
+                    <button class="copy" type="button" data-copy-from="next" hidden>
+                      <svg class="icon" aria-hidden="true"><use href="#i-copy" /></svg>
+                      <span class="visually-hidden">Copy the commands</span>
+                    </button>
+                    <pre><code>git clone {{REPO_URL}}.git &amp;&amp; cd gantry
+pnpm install &amp;&amp; pnpm --filter @gantry/web build
+export GANTRY_SECRET_KEY="$(openssl rand -base64 32)"
+cargo run -- user create --admin --username admin
+cargo run                                        # http://127.0.0.1:8080</code></pre>
+                  </div>
+                  <p class="muted">Needs Rust 1.99.1, a C/C++ compiler, and Node 26 with pnpm 12.</p>
+                </section>
+              </div>
+              <ol class="steps">
+                <li><strong>Log in</strong> at <code>http://&lt;the machine&gt;:8080</code> as the Admin you created.</li>
+                <li><strong>Add a Printer</strong> under Printers, or pick one Gantry found. Choose <em>Simulated</em> to try everything with no hardware.</li>
+                <li><strong>Reach it from anywhere</strong> through Cloudflare Tunnel or Tailscale. Never forward router ports.</li>
+              </ol>
+              <p><a class="link-arrow" href="{{BLOB_URL}}/docs/getting-started.md">The full getting-started guide <svg class="icon" aria-hidden="true"><use href="#i-arrow-right" /></svg></a></p>
+            </div>
+            <div class="quick-start-picture demo demo-only" data-demo="terminal" aria-hidden="true"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="how" aria-labelledby="how-title">
+        <div class="container split">
+          <div>
+            <p class="eyebrow">How it works</p>
+            <h2 id="how-title">A small server on your network</h2>
+            <p>
+              Browsers can't talk to printers directly, so Gantry runs beside them: a Rust server with one async task
+              per Printer, light enough for a Raspberry Pi. The React dashboard is compiled into the binary and one
+              SQLite file holds everything, so there's nothing else to install or run.
+            </p>
+            <ul class="checks" role="list">
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check" /></svg>Printer ports never leave your network; only the dashboard is exposed.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check" /></svg>HTTP behind any tunnel or proxy, or HTTPS on its own.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check" /></svg>A personal, single-Fleet tool. No accounts with anyone else.</li>
+            </ul>
+            <p><a class="link-arrow" href="{{BLOB_URL}}/docs/architecture.md">The architecture <svg class="icon" aria-hidden="true"><use href="#i-arrow-right" /></svg></a></p>
+          </div>
+          <figure class="diagram" aria-labelledby="how-caption">
+            <svg viewBox="0 0 520 300" role="img" aria-labelledby="how-caption">
+              <rect class="d-zone" x="150" y="20" width="360" height="260" rx="18" />
+              <text class="d-label d-muted" x="330" y="48" text-anchor="middle">your network</text>
+              <rect class="d-box" x="10" y="120" width="110" height="60" rx="12" />
+              <text class="d-label" x="65" y="146" text-anchor="middle">Browser or</text>
+              <text class="d-label" x="65" y="164" text-anchor="middle">desktop app</text>
+              <rect class="d-box d-accent" x="190" y="80" width="150" height="140" rx="14" />
+              <text class="d-label d-strong" x="265" y="110" text-anchor="middle">Gantry</text>
+              <text class="d-label d-small" x="265" y="136" text-anchor="middle">HTTP + WebSocket</text>
+              <text class="d-label d-small" x="265" y="156" text-anchor="middle">React dashboard</text>
+              <text class="d-label d-small" x="265" y="176" text-anchor="middle">Drivers</text>
+              <text class="d-label d-small" x="265" y="196" text-anchor="middle">SQLite</text>
+              <rect class="d-box" x="380" y="70" width="110" height="40" rx="10" />
+              <text class="d-label d-small" x="435" y="95" text-anchor="middle">Bambu Lab</text>
+              <rect class="d-box" x="380" y="130" width="110" height="40" rx="10" />
+              <text class="d-label d-small" x="435" y="155" text-anchor="middle">Klipper</text>
+              <rect class="d-box" x="380" y="190" width="110" height="40" rx="10" />
+              <text class="d-label d-small" x="435" y="215" text-anchor="middle">OctoPrint, Prusa…</text>
+              <path class="d-line" d="M120 150 H190" />
+              <path class="d-line" d="M340 120 L380 90 M340 150 H380 M340 180 L380 210" />
+              <text class="d-label d-small d-muted" x="155" y="140" text-anchor="middle">HTTPS</text>
+            </svg>
+            <figcaption id="how-caption">A browser reaches Gantry through a tunnel or proxy; Gantry reaches each Printer over the LAN.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section" id="docs" aria-labelledby="docs-title">
+        <div class="container">
+          <header class="section-header">
+            <p class="eyebrow">Documentation</p>
+            <h2 id="docs-title">Read more</h2>
+          </header>
+          <ul class="doc-grid" role="list">
+            <li><a class="doc" href="{{BLOB_URL}}/docs/getting-started.md"><strong>Getting started</strong><span>Install, first account, first Printer</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg></a></li>
+            <li><a class="doc" href="{{BLOB_URL}}/docs/installing.md"><strong>Installing</strong><span>Releases, unsigned apps, checksums</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg></a></li>
+            <li><a class="doc" href="{{BLOB_URL}}/docs/using-gantry.md"><strong>Using Gantry</strong><span>Every page, and who can do what</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg></a></li>
+            <li><a class="doc" href="{{BLOB_URL}}/docs/configuration.md"><strong>Configuration</strong><span>gantry.toml, environment and CLI</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg></a></li>
+            <li><a class="doc" href="{{BLOB_URL}}/docs/security.md"><strong>Security</strong><span>Logins, roles, 2FA, secrets</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg></a></li>
+            <li><a class="doc" href="{{BLOB_URL}}/docs/remote-access.md"><strong>Remote access</strong><span>Cloudflare Tunnel, Tailscale, HTTPS</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg></a></li>
+            <li><a class="doc" href="{{BLOB_URL}}/docs/desktop.md"><strong>The desktop app</strong><span>Connect to a server, or run one</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg></a></li>
+            <li><a class="doc" href="{{BLOB_URL}}/docs/rest-api.md"><strong>REST API and webhooks</strong><span>Tokens, OpenAPI, signatures</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg></a></li>
+          </ul>
+          <p><a class="link-arrow" href="{{DOCS_URL}}">All the documentation <svg class="icon" aria-hidden="true"><use href="#i-arrow-right" /></svg></a></p>
+        </div>
+      </section>
+
+      <section class="cta" aria-labelledby="cta-title">
+        <div class="container cta-inner">
+          <img src="favicon.svg" alt="" width="56" height="56" />
+          <h2 id="cta-title">Bring your printers onto one screen</h2>
+          <p>Free and open source under the ISC licence.</p>
+          <div class="hero-actions">
+            <a class="button button-on-brand button-lg" href="#download">
+              <svg class="icon" aria-hidden="true"><use href="#i-download" /></svg>
+              Download
+            </a>
+            <a class="button button-outline-on-brand button-lg" href="{{REPO_URL}}">
+              <svg class="icon" aria-hidden="true"><use href="#i-github" /></svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>
+          <img src="favicon.svg" alt="" width="20" height="20" />
+          Gantry © {{YEAR}} Adrian Eyre. ISC licence.
+        </p>
+        <nav aria-label="The project">
+          <ul>
+            <li><a href="{{REPO_URL}}">Source</a></li>
+            <li><a href="{{RELEASES_URL}}">Releases</a></li>
+            <li><a href="{{REPO_URL}}/issues">Issues</a></li>
+            <li><a href="{{BLOB_URL}}/docs/roadmap.md">Roadmap</a></li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
+
+    <dialog class="viewer" aria-label="Screenshot">
+      <form method="dialog">
+        <button class="viewer-close" type="submit">
+          <svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>
+          <span class="visually-hidden">Close</span>
+        </button>
+      </form>
+      <img alt="" />
+      <p class="viewer-caption"></p>
+    </dialog>
+  </body>
+</html>

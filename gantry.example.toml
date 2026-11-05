@@ -1,0 +1,73 @@
+# Gantry's server settings. Copy to gantry.toml (or pass --config / GANTRY_CONFIG).
+# Only server settings belong here: Printers, users and everything else live in
+# SQLite and are managed in the UI (ADR-0004). Every setting can be overridden by
+# the environment variable named beside it.
+
+# GANTRY_BIND
+bind = "127.0.0.1:8080"
+
+# GANTRY_DATA_DIR. The SQLite database is created here on first start.
+data_dir = "data"
+
+# GANTRY_SECRET_KEY. Required: encrypts Printer credentials (ADR-0005). Prefer the
+# environment variable, so the key stays out of files. Generate one with
+#   openssl rand -base64 32
+# secret_key = ""
+
+# GANTRY_LOG_FORMAT: "text" or "json" (for containers).
+log_format = "text"
+
+# GANTRY_SECURE_COOKIES. Session cookies are marked Secure whenever the client's
+# connection is HTTPS: to Gantry itself (tls_cert below), or to a trusted proxy
+# that says so with X-Forwarded-Proto. Set true to always mark them.
+secure_cookies = false
+
+# Serving HTTPS directly (PRD §9.1). Give a PEM certificate chain and its PEM
+# private key, both or neither. Without them Gantry serves plain HTTP, for use
+# behind a TLS-terminating proxy or tunnel. See docs/remote-access.md.
+# GANTRY_TLS_CERT
+# tls_cert = "/etc/gantry/fullchain.pem"
+# GANTRY_TLS_KEY
+# tls_key = "/etc/gantry/privkey.pem"
+
+# GANTRY_TRUSTED_PROXIES (comma-separated). Behind a proxy or tunnel every
+# client seems to come from the proxy's address. List the proxy's addresses or
+# CIDR ranges here, and Gantry believes its X-Forwarded-For (the real client,
+# for login limits and the audit log) and X-Forwarded-Proto (HTTPS, for Secure
+# cookies). Those headers are ignored from every other address, because any
+# client can send them. Empty by default: trust no one.
+# For cloudflared on the same host: ["127.0.0.1", "::1"]
+# trusted_proxies = []
+
+# GANTRY_PUBLIC_URL. The address people reach Gantry at, such as
+# "https://gantry.example.com". When a link to Gantry is pasted into Slack,
+# Discord, WhatsApp, X, LinkedIn and the like, their preview (title,
+# description and image) needs absolute URLs. Without this they are worked out
+# from each request's Host (and, from a trusted proxy, X-Forwarded-Host).
+# public_url = "https://gantry.example.com"
+
+# Failed logins (PRD §9.2). After `login_slow_after` failures in a row, each
+# further attempt on that account waits 1 s, then 2 s, 4 s and so on. After
+# `login_max_failures` the account is locked for `login_lockout_minutes`, even
+# against the right password, unless an Admin unlocks it under Users. Lockouts
+# and unlocks are in the audit log.
+# GANTRY_LOGIN_SLOW_AFTER
+login_slow_after = 3
+# GANTRY_LOGIN_MAX_FAILURES
+login_max_failures = 5
+# GANTRY_LOGIN_LOCKOUT_MINUTES
+login_lockout_minutes = 15
+# GANTRY_LOGIN_CLIENT_ATTEMPTS_PER_MINUTE: failed logins one client (address)
+# may make per minute, whichever accounts it tries. Successful logins don't count.
+login_client_attempts_per_minute = 20
+
+# Prometheus metrics at /metrics (PRD §9.2), off by default. docs/metrics.md lists
+# every metric. Turn them on with a bearer token every scrape must bring, which
+# serves /metrics beside the dashboard (scrape with `authorization: Bearer ...`):
+# GANTRY_METRICS_TOKEN (at least 16 characters; try `openssl rand -hex 24`)
+# metrics_token = ""
+# Or serve them on an address of their own, such as a port only your monitoring
+# network can reach. /metrics is then not served beside the dashboard at all, and
+# needs the token only if metrics_token is also set.
+# GANTRY_METRICS_BIND
+# metrics_bind = "127.0.0.1:9187"

@@ -1,0 +1,11 @@
+{
+  "print": {
+    "command": "push_status",
+    "msg": 1,
+    "sequence_id": "3",
+    "mc_percent": 44,
+    "mc_remaining_time": 63,
+    "layer_num": 13,
+    "nozzle_temper": 220.1
+  }
+}

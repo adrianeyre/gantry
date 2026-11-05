@@ -1,0 +1,3 @@
+# Printer credentials are encrypted with an operator-supplied secret key
+
+Printer credentials (access codes, API keys) are encrypted in SQLite with a key from the config file or the `GANTRY_SECRET_KEY` environment variable, and Gantry refuses to start without one. If the key is lost, only Printer credentials have to be re-entered; the rest of the data stays readable. We rejected storing them in plain text (an exported database or backup would leak working printer credentials) and an OS keychain (it doesn't exist in a headless Docker container). Config export leaves credentials out unless the export explicitly asks for them.

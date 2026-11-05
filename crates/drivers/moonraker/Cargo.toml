@@ -1,0 +1,27 @@
+[package]
+name = "gantry-driver-moonraker"
+description = "The Moonraker Driver: Klipper printers over Moonraker's REST and WebSocket API."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+gantry-core.workspace = true
+gantry-driver-support.workspace = true
+async-trait.workspace = true
+futures.workspace = true
+reqwest = { workspace = true, features = ["multipart"] }
+serde_json.workspace = true
+time.workspace = true
+tokio.workspace = true
+tokio-tungstenite.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tracing-subscriber.workspace = true
+reqwest = { workspace = true, features = ["multipart"] }
+
+[lints]
+workspace = true

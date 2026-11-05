@@ -1,0 +1,11 @@
+# The Sandcastle harness lives in the root package.json; the React frontend,
+# the desktop app's Tauri tooling and the website are the workspace packages.
+# Gantry itself is Rust.
+packages:
+  - web
+  - desktop
+  - site
+
+# tsx and Vite depend on esbuild, whose postinstall fetches its platform binary.
+allowBuilds:
+  esbuild: true

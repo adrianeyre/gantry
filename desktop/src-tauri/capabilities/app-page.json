@@ -1,0 +1,14 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "app-page",
+  "description": "The bundled page that chooses a Gantry server. It alone may call the app's commands. A server's pages get only the notification plugin, at runtime, for their own origin (src/shell.rs).",
+  "local": true,
+  "windows": ["main"],
+  "permissions": [
+    "allow-resume",
+    "allow-choices",
+    "allow-connect-remote",
+    "allow-start-embedded",
+    "allow-create-first-admin"
+  ]
+}

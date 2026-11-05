@@ -1,0 +1,12 @@
+.env
+logs/
+worktrees/
+# `pnpm sandcastle:ca` writes the gateway's CA here. Public, but machine-specific.
+*.pem
+
+# A working brief is yours, not the branch's. `main.ts` takes the prompt file as
+# its argument, so each run gets its own `prompt-*.md` beside the template, and
+# it must not ride along in the diff a reviewer opens. `prompt.md` is the
+# committed template and the exception on purpose.
+prompt*.md
+!prompt.md
