@@ -101,6 +101,26 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      # Fail in seconds, not after the multi-arch build, if this workflow's
+      # token can't use the package. A package that doesn't exist yet is
+      # fine: the first push creates it, linked to this repository. One that
+      # already exists but isn't linked to it (pushed from elsewhere, or left
+      # by an earlier repository of the same name) refuses the token with
+      # `denied`. See docs/processes/releasing.md.
+      - name: Check package access
+        env:
+          IMAGE: ${{ needs.version.outputs.image }}
+          REPO: ${{ github.repository }}
+        run: |
+          if out=$(docker buildx imagetools inspect "$IMAGE:latest" 2>&1); then
+            exit 0
+          fi
+          echo "$out"
+          if grep -qiE 'denied|unauthorized|forbidden' <<<"$out"; then
+            echo "::error title=No access to $IMAGE::$IMAGE already exists but this workflow's token can't use it. In the package's settings (Package settings → Manage Actions access), add $REPO with the Write role, or delete the package so the next release recreates it."
+            exit 1
+          fi
+          # Anything else (not found: no :latest yet) leaves the push to decide.
       - uses: docker/build-push-action@v6
         with:
           context: .

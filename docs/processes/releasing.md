@@ -24,6 +24,8 @@ The only commit made back to `main` is that `CHANGELOG.md` update. It is pushed 
 
 To retry a release whose build failed part-way, fix the cause and merge the fix: the next run releases everything since the last tag. Or run **Release** by hand (**Actions → Release → Run workflow** on `main`, or `gh workflow run release.yml --ref main`); with nothing new since the last tag, it does nothing. A failed run may already have pushed the image, and the next run overwrites that tag.
 
+The image is pushed with the workflow's own token, which can write to `ghcr.io/<owner>/gantry` only if the package is linked to this repository. The first release creates the package and links it. If a `gantry` package already exists under the owner (pushed by hand, or left by an earlier repository of the same name), the push is refused with `denied: permission_denied` and the `image` job stops at **Check package access**. To fix it, open the package on GitHub (**Your profile → Packages → gantry → Package settings**), add this repository under **Manage Actions access** with the **Write** role, then rerun **Release**. Or delete the package, and the next release recreates it.
+
 The desktop installers' workflow also runs on its own, on pull requests that change `desktop/` and by hand ([the desktop app](../desktop.md)). The installers are released unsigned until code signing is set up (#77).
 
 ## What it produces
