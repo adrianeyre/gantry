@@ -17,10 +17,10 @@ So write each commit (or each squash-merge title) as a conventional commit: it b
 2. The merge to `main` runs CI again. When it passes, **Release** starts (`workflow_run`) on the exact commit CI passed.
 3. `version` runs semantic-release in dry-run mode, which works out the next version and publishes nothing. If nothing calls for a release, every later job is skipped.
 4. `image`, `linux-binaries`, `native-binaries` and `desktop` build the release with that version compiled in (`GANTRY_VERSION`, so `gantry --version` and the dashboard's footer say it). `desktop` calls [`desktop.yml`](../../.github/workflows/desktop.yml), which runs the desktop app's checks and builds its installers with that version.
-5. `release` runs semantic-release for real. It tags `v<version>` and creates the GitHub Release with generated notes, the archives, the installers and `SHA256SUMS`. If `main` has moved on and the next version would now be different, it stops rather than mislabel the binaries; the newer commit's own run releases it.
+5. `release` runs semantic-release for real. It adds the release's notes to [`CHANGELOG.md`](../../CHANGELOG.md) and commits that to `main` as `chore(release): <version> [skip ci]`, tags that commit `v<version>`, and creates the GitHub Release with generated notes, the archives, the installers and `SHA256SUMS`. If `main` has moved on and the next version would now be different, it stops rather than mislabel the binaries; the newer commit's own run releases it.
 6. `pages` calls [`pages.yml`](../../.github/workflows/pages.yml), which rebuilds the website so its download buttons link to the new release's files.
 
-Nothing is committed back to `main`: there is no version-bump commit and no changelog file, because the GitHub Releases are the changelog. The workspace version in `Cargo.toml` stays as it is, and is used only by builds outside a release.
+The only commit made back to `main` is that `CHANGELOG.md` update. It is pushed with the workflow's own token and marked `[skip ci]`, so it starts neither CI nor another release; the main ruleset allows it, since it blocks only force-pushes and deletion. There is no version-bump commit: the workspace version in `Cargo.toml` stays as it is, and is used only by builds outside a release. The GitHub Releases carry the same notes as the changelog, plus the downloads.
 
 To retry a release whose build failed part-way, fix the cause and merge the fix: the next run releases everything since the last tag. Or run **Release** by hand (**Actions → Release → Run workflow** on `main`, or `gh workflow run release.yml --ref main`); with nothing new since the last tag, it does nothing. A failed run may already have pushed the image, and the next run overwrites that tag.
 
@@ -34,7 +34,7 @@ The desktop installers' workflow also runs on its own, on pull requests that cha
 | `linux-binaries` | `gantry-<version>-linux-amd64.tar.gz` and `gantry-<version>-linux-arm64.tar.gz`, from the Dockerfile's `binaries` stage. They are the binaries the image runs. |
 | `native-binaries` | `gantry-<version>-windows-x64.zip` (built on Windows, MSVC) and `gantry-<version>-macos-arm64.tar.gz` (built on an Apple silicon runner). |
 | `desktop` | The desktop app: `Gantry_<version>_x64-setup.exe` and `Gantry_<version>_x64_en-US.msi` (Windows), `Gantry_<version>_aarch64.dmg` (macOS, Apple silicon), `Gantry_<version>_amd64.AppImage` and `gantry_<version>_amd64.deb` (Linux x64). |
-| `release` | The tag `v<version>` and the GitHub Release, with every archive, every installer and a `SHA256SUMS` file covering them all. |
+| `release` | The `CHANGELOG.md` commit, the tag `v<version>` and the GitHub Release, with every archive, every installer and a `SHA256SUMS` file covering them all. |
 | `pages` | The website on GitHub Pages, linking to this release's downloads. |
 
 Each binary has the frontend embedded and needs nothing else at runtime beyond what the OS ships. The Linux binaries are linked against glibc 2.36 (Debian 12) and libstdc++, so they run on Debian 12, Ubuntu 22.10 or any newer glibc-based distribution. For anything else, use the Docker image.

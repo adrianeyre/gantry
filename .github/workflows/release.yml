@@ -10,14 +10,16 @@
 # - the desktop app's installers for Windows (NSIS .exe and .msi), macOS
 #   (arm64 .dmg) and Linux (x64 .deb and .AppImage), built by desktop.yml,
 # - a SHA256SUMS file covering every file attached,
+# - a CHANGELOG.md entry, committed to main as
+#   `chore(release): <version> [skip ci]`,
 # - the version tag v<version> and a GitHub Release with notes and the
 #   binaries attached.
 #
 # Once released, the website (pages.yml) is rebuilt so its download buttons
 # link to the new release's files.
 #
-# Nothing is committed back to main: the version is compiled into the binary
-# from GANTRY_VERSION. Code signing is deferred. See docs/processes/releasing.md.
+# The only commit made back to main is the CHANGELOG.md update; the version
+# is compiled into the binary from GANTRY_VERSION, so nothing is bumped. Code signing is deferred. See docs/processes/releasing.md.
 name: Release
 
 on:
@@ -37,11 +39,11 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  # semantic-release and the one plugin it doesn't bundle, run with pnpm dlx
+  # semantic-release and the plugins it doesn't bundle, run with pnpm dlx
   # so the root package.json (the Sandcastle harness) doesn't grow a release
   # toolchain. (npx refuses to run here: the root package.json's devEngines
   # names pnpm.) Configured in .releaserc.json.
-  SEMANTIC_RELEASE: "--package=semantic-release@25.0.9 --package=@semantic-release/exec@7.1.0"
+  SEMANTIC_RELEASE: "--package=semantic-release@25.0.9 --package=@semantic-release/exec@7.1.0 --package=@semantic-release/changelog@7.0.0 --package=@semantic-release/git@11.0.1"
 
 jobs:
   version:
