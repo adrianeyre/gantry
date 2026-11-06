@@ -9,13 +9,13 @@
 // JavaScript; src/main.tsx mounts the Stageshow demos into it. Its
 // `{{NAME}}` placeholders come from release.mjs. The screenshots (docs/images/)
 // and the icons (web/public/) are served from where they already live, so
-// neither is kept twice in Git. The build fails on an unknown placeholder or
-// on a link to a file that wasn't built.
-import { cpSync, createReadStream, existsSync, mkdirSync, readFileSync, readdirSync, rmSync } from "node:fs";
+// neither is kept twice in Git. sitemap.xml is written from release.mjs. The
+// build fails on an unknown placeholder or on a link to a file that wasn't built.
+import { cpSync, createReadStream, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { extname, join } from "node:path";
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
-import { fill, placeholders, readRelease } from "./release.mjs";
+import { fill, placeholders, readRelease, sitemap, sitemapImages } from "./release.mjs";
 
 const site = import.meta.dirname;
 const root = join(site, "..");
@@ -87,6 +87,9 @@ function gantrySite(): Plugin {
         mkdirSync(join(to, ".."), { recursive: true });
         cpSync(from, to, { recursive: true });
       }
+      const missingImages = sitemapImages.filter((file) => !existsSync(join(output, file)));
+      if (missingImages.length) throw new Error(`The sitemap names images that weren't built: ${missingImages.join(", ")}`);
+      writeFileSync(join(output, "sitemap.xml"), sitemap(release));
       checkLinks(readFileSync(join(output, "index.html"), "utf8"));
       const count = readdirSync(output, { recursive: true }).length;
       console.log(`Built the website in ${output} (${count} files, ${release ? release.tagName : "no release yet"})`);
