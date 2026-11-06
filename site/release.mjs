@@ -65,3 +65,36 @@ export function fill(text, values, file) {
     return values[name];
   });
 }
+
+/** The images the sitemap offers to image search, as paths in dist/. */
+export const sitemapImages = [
+  "og-image.jpg",
+  "images/fleet-light.png",
+  "images/fleet-dark.png",
+  "images/queue.png",
+  "images/cameras.png",
+  "images/library.png",
+  "images/model-viewer.png",
+  "images/printer-detail.png",
+  "images/wall.png",
+];
+
+/**
+ * sitemap.xml, written into dist/ by the build: the page, dated by the
+ * latest release (or the build, before there is one), with its images.
+ */
+export function sitemap(release, now = new Date()) {
+  const lastmod = (release?.publishedAt ? new Date(release.publishedAt) : now).toISOString().slice(0, 10);
+  const images = sitemapImages
+    .map((file) => `    <image:image><image:loc>${siteUrl}/${file}</image:loc></image:image>`)
+    .join("\n");
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>${siteUrl}/</loc>
+    <lastmod>${lastmod}</lastmod>
+${images}
+  </url>
+</urlset>
+`;
+}
